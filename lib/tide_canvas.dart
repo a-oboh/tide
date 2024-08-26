@@ -32,7 +32,9 @@ class _TideCanvasState extends State<TideCanvas> {
           },
 
           child: CustomPaint(
-            painter: TideCanvasPainter(),
+            painter: TideCanvasPainter(
+              panPosition: panPosition,
+            ),
             child: const SizedBox.expand(),
           ),
         ),
@@ -42,8 +44,8 @@ class _TideCanvasState extends State<TideCanvas> {
 }
 
 class TideCanvasPainter extends CustomPainter {
-  const TideCanvasPainter({this.panPosition});
-  
+  const TideCanvasPainter({required this.panPosition});
+
   final Offset panPosition;
   @override
   void paint(Canvas canvas, Size size) {
