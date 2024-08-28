@@ -9,19 +9,21 @@ class TideCanvas extends StatefulWidget {
 
 class _TideCanvasState extends State<TideCanvas> {
   Offset panPosition = Offset.zero;
+  Offset? panStart;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: GestureDetector(
-          // onTapDown: (details) {
-          //   var localPos = details.localPosition;
-          //   var globPos = details.globalPosition;
+          onPanDown: (details) {
+            var localPos = details.localPosition;
+            var globPos = details.globalPosition;
 
-          //   print(localPos);
-          //   print(globPos);
-          // },
+            setState(() {
+              panStart = localPos;
+            });
+          },
           onPanUpdate: (details) {
             var localPos = details.localPosition;
             var globPos = details.globalPosition;
@@ -30,12 +32,17 @@ class _TideCanvasState extends State<TideCanvas> {
               panPosition = localPos;
             });
           },
-
-          child: CustomPaint(
-            painter: TideCanvasPainter(
-              panPosition: panPosition,
+          child: RepaintBoundary(
+            child: CustomPaint(
+              painter: TideCanvasPainter(
+                panPosition: panPosition,
+                panStart: panStart,
+              ),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+              ),
             ),
-            child: const SizedBox.expand(),
           ),
         ),
       ),
@@ -44,14 +51,52 @@ class _TideCanvasState extends State<TideCanvas> {
 }
 
 class TideCanvasPainter extends CustomPainter {
-  const TideCanvasPainter({required this.panPosition});
+  TideCanvasPainter({required this.panPosition, required this.panStart});
 
   final Offset panPosition;
+  final Offset? panStart;
+
+  final bgRectPaint = Paint()..color = Colors.black;
+  final linePaint = Paint()
+    ..color = Colors.red
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 5;
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.black;
     final Rect rect = Offset.zero & size;
-    canvas.drawRect(rect, paint);
+    canvas.drawRect(rect, bgRectPaint);
+    // canvas.drawLine(panStart ?? panPosition, panPosition, linePaint);
+
+    if (panStart != null) {
+      // Create a Path to draw from panStart to panPosition
+      final path1 = Path();
+      path1.moveTo(panStart!.dx, panStart!.dy);
+      // path1.lineTo(panPosition.dx, panPosition.dy);
+      path1.quadraticBezierTo(
+          panStart!.dx / 2, panStart!.dy / 2, panPosition.dx, panPosition.dy);
+
+      // Draw the path with the line paint
+      canvas.drawPath(path1, linePaint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+}
+
+class TestPainter extends CustomPainter {
+  final linePaint = Paint()
+    ..color = Colors.red
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 20;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = Path();
+    path.moveTo(0, 0);
+    path.lineTo(size.width, size.height);
+
+    canvas.drawPath(path, linePaint);
   }
 
   @override
