@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tide/core/domain/models/tide_canvas.dart';
 
 class TideCanvasPage extends StatefulWidget {
   const TideCanvasPage({super.key});
@@ -8,30 +9,26 @@ class TideCanvasPage extends StatefulWidget {
 }
 
 class _TideCanvasPageState extends State<TideCanvasPage> {
-  Offset panPosition = Offset.zero;
-
-  List<Offset> points = [];
-  List<Offset> allPoints = [];
+  TideCanvas tideCanvas = TideCanvas(currentDrawing: [], allDrawings: []);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: Stack(
-        children: [
-          buildAllPoints(),
-          buildCurrentPath(),
-        ],
-      )),
+        child: Stack(
+          children: [
+            buildAllPoints(),
+            buildCurrentPath(),
+          ],
+        ),
+      ),
     );
   }
 
   Widget buildAllPoints() {
     return RepaintBoundary(
       child: CustomPaint(
-        painter: TideCanvasPainter(
-          points: allPoints,
-        ),
+        painter: TideCanvasPainter(allPaths: tideCanvas.allDrawings ?? []),
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
@@ -46,31 +43,27 @@ class _TideCanvasPageState extends State<TideCanvasPage> {
         var localPos = event.localPosition;
 
         setState(() {
-          points = [localPos];
+          tideCanvas.currentDrawing = [localPos];
         });
       },
       onPointerMove: (event) {
         var localPos = event.localPosition;
 
-        if (localPos != points[points.length - 1]) {
-          setState(() {
-            points = [...points, localPos];
-          });
-        }
+        setState(() {
+          tideCanvas.currentDrawing.add(localPos);
+        });
       },
       onPointerUp: (event) {
         setState(() {
-          allPoints = [
-            ...allPoints,
-            ...points,
-          ];
+          tideCanvas.allDrawings?.add(List.from(tideCanvas
+              .currentDrawing)); // Add the current drawing as a separate path
+          tideCanvas.currentDrawing = []; // Clear current drawing
         });
       },
       child: RepaintBoundary(
         child: CustomPaint(
           painter: TideCanvasPainter(
-            points: points,
-          ),
+              allPaths: [tideCanvas.currentDrawing]), // Draw the current path
           child: SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
@@ -82,43 +75,37 @@ class _TideCanvasPageState extends State<TideCanvasPage> {
 }
 
 class TideCanvasPainter extends CustomPainter {
-  TideCanvasPainter({
-    required this.points,
-  });
+  TideCanvasPainter({required this.allPaths});
 
-  List<Offset> points;
+  final List<List<Offset>> allPaths;
 
-  final bgRectPaint = Paint()..color = Colors.black;
-  final linePaint = Paint()
+  final linePaint = Paint() 
     ..color = Colors.red
     ..style = PaintingStyle.stroke
     ..strokeWidth = 5;
+
   @override
   void paint(Canvas canvas, Size size) {
-    final path1 = Path();
-    path1.moveTo(points.first.dx, points.first.dy);
+    for (var points in allPaths) {
+      if (points.isEmpty) continue;
 
-    if (points.isNotEmpty) {
+      final path = Path();
+      path.moveTo(points.first.dx, points.first.dy);
+
       for (var i = 0; i < points.length - 1; i++) {
         var point = points[i];
         var nextPoint = points[i + 1];
 
-        print("point: $point");
-        print("next point: $nextPoint");
-
-        // Create a Path to draw from panStart to panPosition
-
-        // path1.lineTo(panPosition.dx, panPosition.dy);
-        path1.quadraticBezierTo(
+        path.quadraticBezierTo(
           point.dx,
           point.dy,
           (point.dx + nextPoint.dx) / 2,
           (point.dy + nextPoint.dy) / 2,
         );
       }
-    }
 
-    canvas.drawPath(path1, linePaint);
+      canvas.drawPath(path, linePaint);
+    }
   }
 
   @override

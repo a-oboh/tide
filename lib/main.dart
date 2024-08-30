@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tide/tide_canvas_page.dart';
+import 'package:tide/view/tide_canvas_page.dart';
 
 void main() {
   runApp(const MyApp());
