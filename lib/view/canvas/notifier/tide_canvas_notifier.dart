@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tide/core/domain/models/tide_canvas.dart';
 import 'package:tide/view/canvas/notifier/state/tide_canvas_state.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'tide_canvas_notifier.g.dart';
 
@@ -11,20 +11,26 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
   TideCanvasState build() {
     var paint = Paint()
       ..color = Colors.black
-      ..style = PaintingStyle.stroke;
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 5;
 
     return TideCanvasState(paint: paint);
   }
 
-  void setCurrentDrawing(TideCanvas tideCanvas) {
-    state = state.copyWith(currentDrawing: tideCanvas);
+  void setCurrentDrawing(TideDrawing tideDrawing) {
+    state = state.copyWith(currentDrawing: tideDrawing);
   }
 
-  void addToDrawings(TideCanvas tideCanvas) {
-    var drawings = state.allDrawings;
+  void updateCurrentDrawing(TideDrawing? drawing) {
+    state = state.copyWith(currentDrawing: drawing);
+  }
 
-    drawings?.add(tideCanvas);
+  void addToDrawings(TideDrawing? drawing) {
+    if (drawing != null) {
+      var drawings = state.allDrawings;
+      final newDrawings = [...drawings, drawing];
 
-    state = state.copyWith(allDrawings: drawings);
+      state = state.copyWith(allDrawings: newDrawings);
+    }
   }
 }

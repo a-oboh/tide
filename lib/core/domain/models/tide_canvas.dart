@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-class TideCanvas {
-  TideCanvas({required this.currentDrawing, this.allDrawings, this.paint});
+class TideDrawing {
+  TideDrawing(
+      {required this.currentDrawing, this.allDrawings, required this.paint});
 
   List<Offset> currentDrawing;
   List<List<Offset>>? allDrawings;
-  Paint? paint;
+  Paint paint;
 }
