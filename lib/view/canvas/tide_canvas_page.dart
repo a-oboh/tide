@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tide/core/domain/models/tide_canvas.dart';
 import 'package:tide/view/canvas/notifier/tide_canvas_notifier.dart';
+import 'package:tide/view/widgets/canvas_settings_widget.dart';
 
 class TideCanvasPage extends ConsumerStatefulWidget {
   const TideCanvasPage({super.key});
@@ -10,10 +11,18 @@ class TideCanvasPage extends ConsumerStatefulWidget {
   ConsumerState<TideCanvasPage> createState() => _TideCanvasPageState();
 }
 
-class _TideCanvasPageState extends ConsumerState<TideCanvasPage> {
+class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
+    with TickerProviderStateMixin {
+  late AnimationController aController;
+  late Animation<double> canvasSettingsAnimation;
+
   @override
   void initState() {
     super.initState();
+    aController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 4));
+    canvasSettingsAnimation = Tween(begin: 0.0, end: 1.0).animate(aController);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final canvasState = ref.read(tideCanvasNotifierProvider);
 
@@ -31,10 +40,35 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage> {
           children: [
             buildAllPoints(),
             buildCurrentPath(),
+            AnimatedBuilder(
+                animation: canvasSettingsAnimation,
+                builder: (context, child) {
+                  return Transform.translate(
+                    offset: Offset(0, 100 * canvasSettingsAnimation.value),
+                    child: Container(
+                      child: const CanvasSettingsWidget(),
+                    ),
+                  );
+                }),
+            IconButton(
+                onPressed: () {
+                  if (aController.value > 0.0) {
+                    aController.reverse();
+                  } else {
+                    aController.forward(from: 0.0);
+                  }
+                },
+                icon: const Icon(Icons.menu)),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    aController.dispose();
+    super.dispose();
   }
 
   Widget buildAllPoints() {
