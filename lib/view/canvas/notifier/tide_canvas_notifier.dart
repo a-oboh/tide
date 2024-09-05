@@ -33,4 +33,12 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
       state = state.copyWith(allDrawings: newDrawings);
     }
   }
+
+  void setPaintColor(Color color) {
+    var paint = state.paint;
+
+    paint.color = color;
+
+    state = state.copyWith(paint: paint);
+  }
 }
