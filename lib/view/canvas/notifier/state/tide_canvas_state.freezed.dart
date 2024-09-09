@@ -16,7 +16,6 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$TideCanvasState {
-  Paint get paint => throw _privateConstructorUsedError;
   TideDrawing? get currentDrawing => throw _privateConstructorUsedError;
   List<TideDrawing> get allDrawings => throw _privateConstructorUsedError;
 
@@ -31,10 +30,7 @@ abstract class $TideCanvasStateCopyWith<$Res> {
           TideCanvasState value, $Res Function(TideCanvasState) then) =
       _$TideCanvasStateCopyWithImpl<$Res, TideCanvasState>;
   @useResult
-  $Res call(
-      {Paint paint,
-      TideDrawing? currentDrawing,
-      List<TideDrawing> allDrawings});
+  $Res call({TideDrawing? currentDrawing, List<TideDrawing> allDrawings});
 }
 
 /// @nodoc
@@ -50,15 +46,10 @@ class _$TideCanvasStateCopyWithImpl<$Res, $Val extends TideCanvasState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? paint = null,
     Object? currentDrawing = freezed,
     Object? allDrawings = null,
   }) {
     return _then(_value.copyWith(
-      paint: null == paint
-          ? _value.paint
-          : paint // ignore: cast_nullable_to_non_nullable
-              as Paint,
       currentDrawing: freezed == currentDrawing
           ? _value.currentDrawing
           : currentDrawing // ignore: cast_nullable_to_non_nullable
@@ -79,10 +70,7 @@ abstract class _$$TideCanvasStateImplCopyWith<$Res>
       __$$TideCanvasStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {Paint paint,
-      TideDrawing? currentDrawing,
-      List<TideDrawing> allDrawings});
+  $Res call({TideDrawing? currentDrawing, List<TideDrawing> allDrawings});
 }
 
 /// @nodoc
@@ -96,15 +84,10 @@ class __$$TideCanvasStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? paint = null,
     Object? currentDrawing = freezed,
     Object? allDrawings = null,
   }) {
     return _then(_$TideCanvasStateImpl(
-      paint: null == paint
-          ? _value.paint
-          : paint // ignore: cast_nullable_to_non_nullable
-              as Paint,
       currentDrawing: freezed == currentDrawing
           ? _value.currentDrawing
           : currentDrawing // ignore: cast_nullable_to_non_nullable
@@ -121,13 +104,9 @@ class __$$TideCanvasStateImplCopyWithImpl<$Res>
 
 class _$TideCanvasStateImpl implements _TideCanvasState {
   const _$TideCanvasStateImpl(
-      {required this.paint,
-      this.currentDrawing,
-      final List<TideDrawing> allDrawings = const []})
+      {this.currentDrawing, final List<TideDrawing> allDrawings = const []})
       : _allDrawings = allDrawings;
 
-  @override
-  final Paint paint;
   @override
   final TideDrawing? currentDrawing;
   final List<TideDrawing> _allDrawings;
@@ -141,7 +120,7 @@ class _$TideCanvasStateImpl implements _TideCanvasState {
 
   @override
   String toString() {
-    return 'TideCanvasState(paint: $paint, currentDrawing: $currentDrawing, allDrawings: $allDrawings)';
+    return 'TideCanvasState(currentDrawing: $currentDrawing, allDrawings: $allDrawings)';
   }
 
   @override
@@ -149,7 +128,6 @@ class _$TideCanvasStateImpl implements _TideCanvasState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TideCanvasStateImpl &&
-            (identical(other.paint, paint) || other.paint == paint) &&
             (identical(other.currentDrawing, currentDrawing) ||
                 other.currentDrawing == currentDrawing) &&
             const DeepCollectionEquality()
@@ -157,7 +135,7 @@ class _$TideCanvasStateImpl implements _TideCanvasState {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, paint, currentDrawing,
+  int get hashCode => Object.hash(runtimeType, currentDrawing,
       const DeepCollectionEquality().hash(_allDrawings));
 
   @JsonKey(ignore: true)
@@ -170,12 +148,9 @@ class _$TideCanvasStateImpl implements _TideCanvasState {
 
 abstract class _TideCanvasState implements TideCanvasState {
   const factory _TideCanvasState(
-      {required final Paint paint,
-      final TideDrawing? currentDrawing,
+      {final TideDrawing? currentDrawing,
       final List<TideDrawing> allDrawings}) = _$TideCanvasStateImpl;
 
-  @override
-  Paint get paint;
   @override
   TideDrawing? get currentDrawing;
   @override

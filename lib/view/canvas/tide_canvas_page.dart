@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tide/core/domain/models/tide_canvas.dart';
 import 'package:tide/view/canvas/notifier/tide_canvas_notifier.dart';
+import 'package:tide/view/canvas/notifier/tide_paint_notifier.dart';
 import 'package:tide/view/widgets/canvas_settings_widget.dart';
 
 class TideCanvasPage extends ConsumerStatefulWidget {
@@ -14,14 +15,19 @@ class TideCanvasPage extends ConsumerStatefulWidget {
 class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
     with TickerProviderStateMixin {
   late AnimationController aController;
-  late Animation<double> canvasSettingsAnimation;
+  late Animation<double> paintSettingsPosition;
+  late Animation<double> paintSettingsOpacity;
 
   @override
   void initState() {
     super.initState();
-    aController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 4));
-    canvasSettingsAnimation = Tween(begin: 0.0, end: 1.0).animate(aController);
+    aController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 200));
+    paintSettingsPosition = Tween(begin: -1.0, end: 1.0).animate(aController);
+    paintSettingsOpacity = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+      parent: aController,
+      curve: const Interval(0.5, 0.8),
+    ));
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final canvasState = ref.read(tideCanvasNotifierProvider);
@@ -34,31 +40,35 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
 
   @override
   Widget build(BuildContext context) {
+    var paint = ref.watch(tidePaintNotifierProvider).paint;
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
           children: [
             buildAllPoints(),
-            buildCurrentPath(),
+            buildCurrentPath(paint),
             AnimatedBuilder(
-                animation: canvasSettingsAnimation,
+                animation: paintSettingsPosition,
                 builder: (context, child) {
                   return Transform.translate(
-                    offset: Offset(0, 100 * canvasSettingsAnimation.value),
-                    child: Container(
+                    offset: Offset(0, 50 * paintSettingsPosition.value),
+                    child: Opacity(
+                      opacity: paintSettingsOpacity.value,
                       child: const CanvasSettingsWidget(),
                     ),
                   );
                 }),
             IconButton(
-                onPressed: () {
-                  if (aController.value > 0.0) {
-                    aController.reverse();
-                  } else {
-                    aController.forward(from: 0.0);
-                  }
-                },
-                icon: const Icon(Icons.menu)),
+              onPressed: () {
+                if (aController.value > 0.5) {
+                  aController.reverse();
+                } else {
+                  aController.forward(from: 0.0);
+                }
+              },
+              icon: const Icon(Icons.menu),
+            ),
           ],
         ),
       ),
@@ -85,12 +95,12 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
     );
   }
 
-  Widget buildCurrentPath() {
+  Widget buildCurrentPath(Paint paint) {
     return Listener(
       onPointerDown: (event) {
         var localPos = event.localPosition;
 
-        var paint = ref.read(tideCanvasNotifierProvider).paint;
+        print('paint color: ${paint.color}');
 
         var drawing = TideDrawing(
           currentDrawing: [localPos],
@@ -122,7 +132,7 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
       child: RepaintBoundary(
         child: CustomPaint(
           painter: TideCanvasPainter(allDrawings: [
-            ref.watch(tideCanvasNotifierProvider).currentDrawing
+            ref.read(tideCanvasNotifierProvider).currentDrawing
           ]), // Draw the current path
           child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -140,34 +150,8 @@ class TideCanvasPainter extends CustomPainter {
   // final List<List<Offset>> allPaths;
   final List<TideDrawing?> allDrawings;
 
-  final linePaint = Paint()
-    ..color = Colors.red
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 5;
-
   @override
   void paint(Canvas canvas, Size size) {
-    // for (var points in allPaths) {
-    //   if (points.isEmpty) continue;
-
-    //   final path = Path();
-    //   path.moveTo(points.first.dx, points.first.dy);
-
-    //   for (var i = 0; i < points.length - 1; i++) {
-    //     var point = points[i];
-    //     var nextPoint = points[i + 1];
-
-    //     path.quadraticBezierTo(
-    //       point.dx,
-    //       point.dy,
-    //       (point.dx + nextPoint.dx) / 2,
-    //       (point.dy + nextPoint.dy) / 2,
-    //     );
-    //   }
-
-    //   canvas.drawPath(path, linePaint);
-    // }
-
     for (var drawing in allDrawings) {
       if ((drawing?.currentDrawing.isEmpty ?? true) || drawing?.paint == null) {
         continue;
@@ -191,6 +175,7 @@ class TideCanvasPainter extends CustomPainter {
       }
 
       canvas.drawPath(path, drawing.paint);
+      // print('paint: ${drawing.paint.color}');
     }
   }
 

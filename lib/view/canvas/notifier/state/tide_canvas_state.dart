@@ -8,7 +8,6 @@ part 'tide_canvas_state.freezed.dart';
 @freezed
 class TideCanvasState with _$TideCanvasState {
   const factory TideCanvasState({
-    required Paint paint,
     TideDrawing? currentDrawing,
     @Default([]) List<TideDrawing> allDrawings,
   }) = _TideCanvasState;

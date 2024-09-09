@@ -14,7 +14,7 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 5;
 
-    return TideCanvasState(paint: paint);
+    return TideCanvasState();
   }
 
   void setCurrentDrawing(TideDrawing tideDrawing) {
@@ -34,11 +34,5 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
     }
   }
 
-  void setPaintColor(Color color) {
-    var paint = state.paint;
-
-    paint.color = color;
-
-    state = state.copyWith(paint: paint);
-  }
+ 
 }

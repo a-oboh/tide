@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tide/view/canvas/notifier/tide_canvas_notifier.dart';
+import 'package:tide/view/canvas/notifier/tide_paint_notifier.dart';
 
 class CanvasSettingsWidget extends ConsumerStatefulWidget {
   const CanvasSettingsWidget({super.key});
@@ -37,9 +38,7 @@ class _CanvasSettingsWidgetState extends ConsumerState<CanvasSettingsWidget> {
                 default:
                   color = Colors.black;
               }
-              ref
-                  .read(tideCanvasNotifierProvider.notifier)
-                  .setPaintColor(color);
+              ref.read(tidePaintNotifierProvider.notifier).setPaintColor(color);
               setState(() {
                 colorDropDownVal = val;
               });
