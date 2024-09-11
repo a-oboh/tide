@@ -2,7 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tide/view/canvas/notifier/state/tide_paint_state.dart';
+import 'package:tide/core/domain/models/tide_canvas.dart';
+import 'package:tide/view/notifier/state/tide_paint_state.dart';
 
 part 'tide_paint_notifier.g.dart';
 
@@ -21,11 +22,16 @@ class TidePaintNotifier extends _$TidePaintNotifier {
     var paint = state.paint;
 
     state = state.copyWith(
-        paint: Paint()
-          ..color = color
-          ..style = paint.style
-          ..strokeWidth = Random().nextInt(4) + 2);
+      paint: Paint()
+        ..color = color
+        ..style = paint.style
+        ..strokeWidth = paint.strokeWidth,
+    );
+  }
 
-    print('New paint color is: ${state.paint.color}');
+  void setDrawingType(DrawingType type) {
+    if (state.drawingType != type) {
+      state = state.copyWith(drawingType: type);
+    }
   }
 }

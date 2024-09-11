@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tide/core/domain/models/tide_canvas.dart';
-import 'package:tide/view/canvas/notifier/state/tide_canvas_state.dart';
+import 'package:tide/view/notifier/state/tide_canvas_state.dart';
 
 part 'tide_canvas_notifier.g.dart';
 
@@ -9,11 +9,6 @@ part 'tide_canvas_notifier.g.dart';
 class TideCanvasNotifier extends _$TideCanvasNotifier {
   @override
   TideCanvasState build() {
-    var paint = Paint()
-      ..color = Colors.black
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 5;
-
     return TideCanvasState();
   }
 
@@ -33,6 +28,4 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
       state = state.copyWith(allDrawings: newDrawings);
     }
   }
-
- 
 }

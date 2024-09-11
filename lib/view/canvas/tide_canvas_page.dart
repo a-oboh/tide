@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tide/core/domain/models/tide_canvas.dart';
-import 'package:tide/view/canvas/notifier/tide_canvas_notifier.dart';
-import 'package:tide/view/canvas/notifier/tide_paint_notifier.dart';
+import 'package:tide/view/notifier/state/tide_paint_state.dart';
+import 'package:tide/view/notifier/tide_canvas_notifier.dart';
+import 'package:tide/view/notifier/tide_paint_notifier.dart';
 import 'package:tide/view/widgets/canvas_settings_widget.dart';
 
 class TideCanvasPage extends ConsumerStatefulWidget {
@@ -40,14 +41,17 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
 
   @override
   Widget build(BuildContext context) {
-    var paint = ref.watch(tidePaintNotifierProvider).paint;
+    var paintState = ref.watch(tidePaintNotifierProvider);
 
     return Scaffold(
       body: SafeArea(
         child: Stack(
           children: [
             buildAllPoints(),
-            buildCurrentPath(paint),
+            buildCurrentPath(
+              paint: paintState.paint,
+              drawingType: paintState.drawingType,
+            ),
             AnimatedBuilder(
                 animation: paintSettingsPosition,
                 builder: (context, child) {
@@ -95,16 +99,18 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
     );
   }
 
-  Widget buildCurrentPath(Paint paint) {
+  Widget buildCurrentPath({
+    required Paint paint,
+    required DrawingType drawingType,
+  }) {
     return Listener(
       onPointerDown: (event) {
         var localPos = event.localPosition;
 
-        print('paint color: ${paint.color}');
-
         var drawing = TideDrawing(
           currentDrawing: [localPos],
           paint: paint,
+          drawingType: drawingType,
         );
 
         ref
@@ -162,20 +168,24 @@ class TideCanvasPainter extends CustomPainter {
       final path = Path();
       path.moveTo(points.first.dx, points.first.dy);
 
-      for (var i = 0; i < points.length - 1; i++) {
-        var point = points[i];
-        var nextPoint = points[i + 1];
+      if (drawing.drawingType == DrawingType.rectangle) {
+        Rect rect = Rect.fromPoints(points.first, points.last);
+        canvas.drawRect(rect, drawing.paint);
+      } else {
+        for (var i = 0; i < points.length - 1; i++) {
+          var point = points[i];
+          var nextPoint = points[i + 1];
 
-        path.quadraticBezierTo(
-          point.dx,
-          point.dy,
-          (point.dx + nextPoint.dx) / 2,
-          (point.dy + nextPoint.dy) / 2,
-        );
+          path.quadraticBezierTo(
+            point.dx,
+            point.dy,
+            (point.dx + nextPoint.dx) / 2,
+            (point.dy + nextPoint.dy) / 2,
+          );
+        }
       }
 
       canvas.drawPath(path, drawing.paint);
-      // print('paint: ${drawing.paint.color}');
     }
   }
 
