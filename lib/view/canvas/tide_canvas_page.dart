@@ -121,7 +121,18 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
 
         var currentDrawing =
             ref.read(tideCanvasNotifierProvider).currentDrawing;
-        currentDrawing?.currentDrawing.add(localPos);
+
+        if (drawingType == DrawingType.triangle) {
+          if (currentDrawing!.currentDrawing.length > 1) {
+            currentDrawing?.currentDrawing[1] = localPos;
+          } else {
+            currentDrawing.currentDrawing.add(localPos);
+          }
+          // print('drawing: ${currentDrawing.currentDrawing}');
+        } else {
+          currentDrawing?.currentDrawing.add(localPos);
+        }
+
         ref
             .read(tideCanvasNotifierProvider.notifier)
             .updateCurrentDrawing(currentDrawing);
@@ -175,6 +186,18 @@ class TideCanvasPainter extends CustomPainter {
         case DrawingType.oval:
           Rect rect = Rect.fromPoints(points.first, points.last);
           canvas.drawOval(rect, drawing.paint);
+
+          break;
+        case DrawingType.triangle:
+          final startPoint = drawing.currentDrawing.first;
+          final endPoint = drawing.currentDrawing.last;
+
+          path.moveTo(startPoint.dx, startPoint.dy);
+          path.lineTo(endPoint.dx, endPoint.dy);
+          path.lineTo(
+              startPoint.dx - (endPoint.dx - startPoint.dx), endPoint.dy);
+          path.close();
+          canvas.drawPath(path, drawing.paint);
           break;
         default:
           for (var i = 0; i < points.length - 1; i++) {

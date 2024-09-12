@@ -18,4 +18,5 @@ enum DrawingType {
   path,
   rectangle,
   oval,
+  triangle,
 }
