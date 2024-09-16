@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tide/core/domain/models/tide_canvas.dart';
 import 'package:tide/view/notifier/state/tide_canvas_state.dart';
@@ -9,7 +8,7 @@ part 'tide_canvas_notifier.g.dart';
 class TideCanvasNotifier extends _$TideCanvasNotifier {
   @override
   TideCanvasState build() {
-    return TideCanvasState();
+    return const TideCanvasState();
   }
 
   void setCurrentDrawing(TideDrawing tideDrawing) {

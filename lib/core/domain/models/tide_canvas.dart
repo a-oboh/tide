@@ -19,4 +19,5 @@ enum DrawingType {
   rectangle,
   oval,
   triangle,
+  eraser,
 }

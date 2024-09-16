@@ -9,6 +9,7 @@ part 'tide_paint_state.freezed.dart';
 class TidePaintState with _$TidePaintState {
   const factory TidePaintState({
     required Paint paint,
+    required Paint eraserPaint,
     @Default(DrawingType.path) DrawingType drawingType,
   }) = _TidePaintState;
 }

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tide/core/domain/models/tide_canvas.dart';
@@ -15,11 +13,23 @@ class TidePaintNotifier extends _$TidePaintNotifier {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 5;
 
-    return TidePaintState(paint: paint);
+    var eraserPaint = Paint()
+      ..color = Colors.white
+      ..style = paint.style
+      ..strokeWidth = paint.strokeWidth;
+
+    return TidePaintState(
+      paint: paint,
+      eraserPaint: eraserPaint,
+    );
   }
 
   void setPaintColor(Color color) {
     var paint = state.paint;
+
+    if (state.drawingType == DrawingType.eraser) {
+      return;
+    }
 
     state = state.copyWith(
       paint: Paint()

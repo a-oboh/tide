@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$TidePaintState {
   Paint get paint => throw _privateConstructorUsedError;
+  Paint get eraserPaint => throw _privateConstructorUsedError;
   DrawingType get drawingType => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -30,7 +31,7 @@ abstract class $TidePaintStateCopyWith<$Res> {
           TidePaintState value, $Res Function(TidePaintState) then) =
       _$TidePaintStateCopyWithImpl<$Res, TidePaintState>;
   @useResult
-  $Res call({Paint paint, DrawingType drawingType});
+  $Res call({Paint paint, Paint eraserPaint, DrawingType drawingType});
 }
 
 /// @nodoc
@@ -47,12 +48,17 @@ class _$TidePaintStateCopyWithImpl<$Res, $Val extends TidePaintState>
   @override
   $Res call({
     Object? paint = null,
+    Object? eraserPaint = null,
     Object? drawingType = null,
   }) {
     return _then(_value.copyWith(
       paint: null == paint
           ? _value.paint
           : paint // ignore: cast_nullable_to_non_nullable
+              as Paint,
+      eraserPaint: null == eraserPaint
+          ? _value.eraserPaint
+          : eraserPaint // ignore: cast_nullable_to_non_nullable
               as Paint,
       drawingType: null == drawingType
           ? _value.drawingType
@@ -70,7 +76,7 @@ abstract class _$$TidePaintStateImplCopyWith<$Res>
       __$$TidePaintStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Paint paint, DrawingType drawingType});
+  $Res call({Paint paint, Paint eraserPaint, DrawingType drawingType});
 }
 
 /// @nodoc
@@ -85,12 +91,17 @@ class __$$TidePaintStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? paint = null,
+    Object? eraserPaint = null,
     Object? drawingType = null,
   }) {
     return _then(_$TidePaintStateImpl(
       paint: null == paint
           ? _value.paint
           : paint // ignore: cast_nullable_to_non_nullable
+              as Paint,
+      eraserPaint: null == eraserPaint
+          ? _value.eraserPaint
+          : eraserPaint // ignore: cast_nullable_to_non_nullable
               as Paint,
       drawingType: null == drawingType
           ? _value.drawingType
@@ -104,17 +115,21 @@ class __$$TidePaintStateImplCopyWithImpl<$Res>
 
 class _$TidePaintStateImpl implements _TidePaintState {
   const _$TidePaintStateImpl(
-      {required this.paint, this.drawingType = DrawingType.path});
+      {required this.paint,
+      required this.eraserPaint,
+      this.drawingType = DrawingType.path});
 
   @override
   final Paint paint;
+  @override
+  final Paint eraserPaint;
   @override
   @JsonKey()
   final DrawingType drawingType;
 
   @override
   String toString() {
-    return 'TidePaintState(paint: $paint, drawingType: $drawingType)';
+    return 'TidePaintState(paint: $paint, eraserPaint: $eraserPaint, drawingType: $drawingType)';
   }
 
   @override
@@ -123,12 +138,14 @@ class _$TidePaintStateImpl implements _TidePaintState {
         (other.runtimeType == runtimeType &&
             other is _$TidePaintStateImpl &&
             (identical(other.paint, paint) || other.paint == paint) &&
+            (identical(other.eraserPaint, eraserPaint) ||
+                other.eraserPaint == eraserPaint) &&
             (identical(other.drawingType, drawingType) ||
                 other.drawingType == drawingType));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, paint, drawingType);
+  int get hashCode => Object.hash(runtimeType, paint, eraserPaint, drawingType);
 
   @JsonKey(ignore: true)
   @override
@@ -141,10 +158,13 @@ class _$TidePaintStateImpl implements _TidePaintState {
 abstract class _TidePaintState implements TidePaintState {
   const factory _TidePaintState(
       {required final Paint paint,
+      required final Paint eraserPaint,
       final DrawingType drawingType}) = _$TidePaintStateImpl;
 
   @override
   Paint get paint;
+  @override
+  Paint get eraserPaint;
   @override
   DrawingType get drawingType;
   @override

@@ -60,7 +60,7 @@ class _CanvasSettingsWidgetState extends ConsumerState<CanvasSettingsWidget> {
                   value: DrawingType.oval,
                   child: Text('Oval'),
                 ),
-                 DropdownMenuItem(
+                DropdownMenuItem(
                   value: DrawingType.triangle,
                   child: Text('Triangle'),
                 ),

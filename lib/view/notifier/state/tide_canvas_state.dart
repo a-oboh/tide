@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tide/core/domain/models/tide_canvas.dart';
 

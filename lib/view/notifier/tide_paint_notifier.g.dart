@@ -6,7 +6,7 @@ part of 'tide_paint_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$tidePaintNotifierHash() => r'fcbb1e32053336d4a124f150f5c02031b229ced9';
+String _$tidePaintNotifierHash() => r'bc546eabdae3722699785e92380a1cc4f06eea7f';
 
 /// See also [TidePaintNotifier].
 @ProviderFor(TidePaintNotifier)

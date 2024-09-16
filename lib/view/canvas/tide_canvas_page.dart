@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tide/core/domain/models/tide_canvas.dart';
+import 'package:tide/core/utils/colors.dart';
+import 'package:tide/core/utils/extensions.dart';
 import 'package:tide/view/notifier/tide_canvas_notifier.dart';
 import 'package:tide/view/notifier/tide_paint_notifier.dart';
 import 'package:tide/view/widgets/canvas_settings_widget.dart';
@@ -44,33 +46,39 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
 
     return Scaffold(
       body: SafeArea(
-        child: Stack(
+        child: Column(
           children: [
-            buildAllPoints(),
-            buildCurrentPath(
-              paint: paintState.paint,
-              drawingType: paintState.drawingType,
-            ),
-            AnimatedBuilder(
-                animation: paintSettingsPosition,
-                builder: (context, child) {
-                  return Transform.translate(
-                    offset: Offset(0, 50 * paintSettingsPosition.value),
-                    child: Opacity(
-                      opacity: paintSettingsOpacity.value,
-                      child: const CanvasSettingsWidget(),
-                    ),
-                  );
-                }),
-            IconButton(
-              onPressed: () {
-                if (aController.value > 0.5) {
-                  aController.reverse();
-                } else {
-                  aController.forward(from: 0.0);
-                }
-              },
-              icon: const Icon(Icons.menu),
+            const CanvasPageToolSection(),
+            Expanded(
+              child: Stack(
+                children: [
+                  buildAllPoints(),
+                  buildCurrentPath(
+                    ref: ref,
+                  ),
+                  AnimatedBuilder(
+                      animation: paintSettingsPosition,
+                      builder: (context, child) {
+                        return Transform.translate(
+                          offset: Offset(0, 50 * paintSettingsPosition.value),
+                          child: Opacity(
+                            opacity: paintSettingsOpacity.value,
+                            child: const CanvasSettingsWidget(),
+                          ),
+                        );
+                      }),
+                  IconButton(
+                    onPressed: () {
+                      if (aController.value > 0.5) {
+                        aController.reverse();
+                      } else {
+                        aController.forward(from: 0.0);
+                      }
+                    },
+                    icon: const Icon(Icons.menu),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -99,18 +107,32 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
   }
 
   Widget buildCurrentPath({
-    required Paint paint,
-    required DrawingType drawingType,
+    // required Paint paint,
+    // required DrawingType drawingType,
+    required WidgetRef ref,
   }) {
+    var paintState = ref.watch(tidePaintNotifierProvider);
+    var drawingType = paintState.drawingType;
+    var paint = paintState.paint;
+
     return Listener(
       onPointerDown: (event) {
         var localPos = event.localPosition;
+        late TideDrawing drawing;
 
-        var drawing = TideDrawing(
-          currentDrawing: [localPos],
-          paint: paint,
-          drawingType: drawingType,
-        );
+        if (drawingType == DrawingType.eraser) {
+          drawing = TideDrawing(
+            currentDrawing: [localPos],
+            paint: paintState.eraserPaint,
+            drawingType: drawingType,
+          );
+        } else {
+          drawing = TideDrawing(
+            currentDrawing: [localPos],
+            paint: paint,
+            drawingType: drawingType,
+          );
+        }
 
         ref
             .read(tideCanvasNotifierProvider.notifier)
@@ -124,11 +146,10 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
 
         if (drawingType == DrawingType.triangle) {
           if (currentDrawing!.currentDrawing.length > 1) {
-            currentDrawing?.currentDrawing[1] = localPos;
+            currentDrawing.currentDrawing[1] = localPos;
           } else {
             currentDrawing.currentDrawing.add(localPos);
           }
-          // print('drawing: ${currentDrawing.currentDrawing}');
         } else {
           currentDrawing?.currentDrawing.add(localPos);
         }
@@ -160,6 +181,37 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
   }
 }
 
+class CanvasPageToolSection extends ConsumerWidget {
+  const CanvasPageToolSection({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+      decoration: const BoxDecoration(color: TideColors.grey),
+      child: Row(
+        children: [
+          IconButton(onPressed: () {}, icon: const Icon(Icons.undo)),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.redo)),
+          5.width,
+          Tooltip(
+            message: 'Eraser',
+            child: IconButton(
+                onPressed: () {
+                  // activate eraser
+                  ref
+                      .read(tidePaintNotifierProvider.notifier)
+                      .setDrawingType(DrawingType.eraser);
+                },
+                icon: const Icon(Icons.stay_current_landscape)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class TideCanvasPainter extends CustomPainter {
   TideCanvasPainter({required this.allDrawings});
 
@@ -186,8 +238,8 @@ class TideCanvasPainter extends CustomPainter {
         case DrawingType.oval:
           Rect rect = Rect.fromPoints(points.first, points.last);
           canvas.drawOval(rect, drawing.paint);
-
           break;
+
         case DrawingType.triangle:
           final startPoint = drawing.currentDrawing.first;
           final endPoint = drawing.currentDrawing.last;
