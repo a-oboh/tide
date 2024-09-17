@@ -28,21 +28,28 @@ class TidePaintNotifier extends _$TidePaintNotifier {
   void setPaintColor(Color color) {
     var paint = state.paint;
 
-    if (state.drawingType == DrawingType.eraser) {
-      return;
+    if (state.drawingType != DrawingType.eraser) {
+      state = state.copyWith(
+        paint: Paint()
+          ..color = color
+          ..style = paint.style
+          ..strokeWidth = paint.strokeWidth,
+        pickerColor: color,
+      );
     }
-
-    state = state.copyWith(
-      paint: Paint()
-        ..color = color
-        ..style = paint.style
-        ..strokeWidth = paint.strokeWidth,
-    );
   }
 
   void setDrawingType(DrawingType type) {
+    late DrawingType previousType;
     if (state.drawingType != type) {
+      previousType = state.drawingType;
       state = state.copyWith(drawingType: type);
+      if (type == DrawingType.eraser) {
+        state = state.copyWith(previousDrawingType: previousType);
+      }
+    } else if (type == DrawingType.eraser) {
+      // undo eraser selection
+      state = state.copyWith(drawingType: state.previousDrawingType);
     }
   }
 }

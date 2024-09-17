@@ -30,11 +30,13 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
 
   void undoDrawing() {
     if (state.allDrawings.isNotEmpty) {
-
       var allDrawings = [...state.allDrawings];
       var removed = allDrawings.removeLast();
-      state = state.copyWith(allDrawings: allDrawings, removedDrawing: removed, currentDrawing: null);
-      print(allDrawings);
+      state = state.copyWith(
+        allDrawings: allDrawings,
+        removedDrawing: removed,
+        currentDrawing: null,
+      );
     }
   }
 
@@ -43,7 +45,10 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
       var drawings = state.allDrawings;
       final newDrawings = [...drawings, state.removedDrawing!];
 
-      state = state.copyWith(allDrawings: newDrawings, removedDrawing: null);
+      state = state.copyWith(
+        allDrawings: newDrawings,
+        removedDrawing: null,
+      );
     }
   }
 }

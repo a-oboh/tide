@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tide/core/domain/models/tide_canvas.dart';
-import 'package:tide/core/utils/colors.dart';
-import 'package:tide/core/utils/extensions.dart';
 import 'package:tide/view/notifier/tide_canvas_notifier.dart';
 import 'package:tide/view/notifier/tide_paint_notifier.dart';
 import 'package:tide/view/widgets/canvas_settings_widget.dart';
@@ -180,7 +178,6 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
     );
   }
 }
-
 
 class TideCanvasPainter extends CustomPainter {
   TideCanvasPainter({required this.allDrawings});

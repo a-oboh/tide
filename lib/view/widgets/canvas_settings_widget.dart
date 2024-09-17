@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tide/core/domain/models/tide_canvas.dart';
 import 'package:tide/core/utils/colors.dart';
@@ -91,15 +92,15 @@ class CanvasPageToolSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final drawingType = ref.watch(tidePaintNotifierProvider).drawingType;
+
     return Container(
       decoration: const BoxDecoration(color: TideColors.grey),
       child: Row(
         children: [
           IconButton(
               onPressed: () {
-                ref
-                    .read(tideCanvasNotifierProvider.notifier)
-                    .undoDrawing();
+                ref.read(tideCanvasNotifierProvider.notifier).undoDrawing();
               },
               icon: const Icon(Icons.undo)),
           IconButton(
@@ -117,8 +118,36 @@ class CanvasPageToolSection extends ConsumerWidget {
                       .read(tidePaintNotifierProvider.notifier)
                       .setDrawingType(DrawingType.eraser);
                 },
-                icon: const Icon(Icons.stay_current_landscape)),
+                icon: Icon(
+                  Icons.stay_current_landscape,
+                  color: drawingType == DrawingType.eraser
+                      ? TideColors.accentColor
+                      : TideColors.iconGrey,
+                )),
           ),
+          Tooltip(
+            message: 'Color',
+            child: IconButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: ColorPicker(
+                          pickerColor:
+                              ref.watch(tidePaintNotifierProvider).pickerColor,
+                          onColorChanged: (Color value) {
+                            ref
+                                .read(tidePaintNotifierProvider.notifier)
+                                .setPaintColor(value);
+                          },
+                        ),
+                      );
+                    });
+              },
+              icon: const Icon(Icons.color_lens),
+            ),
+          )
         ],
       ),
     );

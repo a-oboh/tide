@@ -1,5 +1,4 @@
-import 'dart:ui';
-
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tide/core/domain/models/tide_canvas.dart';
 
@@ -10,6 +9,8 @@ class TidePaintState with _$TidePaintState {
   const factory TidePaintState({
     required Paint paint,
     required Paint eraserPaint,
+    @Default(Colors.black) Color pickerColor,
     @Default(DrawingType.path) DrawingType drawingType,
+    @Default(DrawingType.path) DrawingType previousDrawingType,
   }) = _TidePaintState;
 }
