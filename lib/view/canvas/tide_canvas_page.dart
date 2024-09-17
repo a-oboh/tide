@@ -169,7 +169,7 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
       child: RepaintBoundary(
         child: CustomPaint(
           painter: TideCanvasPainter(allDrawings: [
-            ref.read(tideCanvasNotifierProvider).currentDrawing
+            ref.watch(tideCanvasNotifierProvider).currentDrawing
           ]), // Draw the current path
           child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -181,36 +181,6 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
   }
 }
 
-class CanvasPageToolSection extends ConsumerWidget {
-  const CanvasPageToolSection({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      decoration: const BoxDecoration(color: TideColors.grey),
-      child: Row(
-        children: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.undo)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.redo)),
-          5.width,
-          Tooltip(
-            message: 'Eraser',
-            child: IconButton(
-                onPressed: () {
-                  // activate eraser
-                  ref
-                      .read(tidePaintNotifierProvider.notifier)
-                      .setDrawingType(DrawingType.eraser);
-                },
-                icon: const Icon(Icons.stay_current_landscape)),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class TideCanvasPainter extends CustomPainter {
   TideCanvasPainter({required this.allDrawings});

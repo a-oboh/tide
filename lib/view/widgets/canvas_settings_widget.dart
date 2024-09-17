@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tide/core/domain/models/tide_canvas.dart';
+import 'package:tide/core/utils/colors.dart';
+import 'package:tide/core/utils/extensions.dart';
+import 'package:tide/view/notifier/tide_canvas_notifier.dart';
 import 'package:tide/view/notifier/tide_paint_notifier.dart';
 
 class CanvasSettingsWidget extends ConsumerStatefulWidget {
@@ -75,6 +78,47 @@ class _CanvasSettingsWidgetState extends ConsumerState<CanvasSettingsWidget> {
                   });
                 }
               }),
+        ],
+      ),
+    );
+  }
+}
+
+class CanvasPageToolSection extends ConsumerWidget {
+  const CanvasPageToolSection({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+      decoration: const BoxDecoration(color: TideColors.grey),
+      child: Row(
+        children: [
+          IconButton(
+              onPressed: () {
+                ref
+                    .read(tideCanvasNotifierProvider.notifier)
+                    .undoDrawing();
+              },
+              icon: const Icon(Icons.undo)),
+          IconButton(
+              onPressed: () {
+                ref.read(tideCanvasNotifierProvider.notifier).redoDrawing();
+              },
+              icon: const Icon(Icons.redo)),
+          5.width,
+          Tooltip(
+            message: 'Eraser',
+            child: IconButton(
+                onPressed: () {
+                  // activate eraser
+                  ref
+                      .read(tidePaintNotifierProvider.notifier)
+                      .setDrawingType(DrawingType.eraser);
+                },
+                icon: const Icon(Icons.stay_current_landscape)),
+          ),
         ],
       ),
     );

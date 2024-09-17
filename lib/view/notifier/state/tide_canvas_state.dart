@@ -7,6 +7,7 @@ part 'tide_canvas_state.freezed.dart';
 class TideCanvasState with _$TideCanvasState {
   const factory TideCanvasState({
     TideDrawing? currentDrawing,
+    TideDrawing? removedDrawing,
     @Default([]) List<TideDrawing> allDrawings,
   }) = _TideCanvasState;
 }

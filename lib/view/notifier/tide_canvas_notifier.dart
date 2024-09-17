@@ -12,7 +12,7 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
   }
 
   void setCurrentDrawing(TideDrawing tideDrawing) {
-    state = state.copyWith(currentDrawing: tideDrawing);
+    state = state.copyWith(currentDrawing: tideDrawing, removedDrawing: null);
   }
 
   void updateCurrentDrawing(TideDrawing? drawing) {
@@ -25,6 +25,25 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
       final newDrawings = [...drawings, drawing];
 
       state = state.copyWith(allDrawings: newDrawings);
+    }
+  }
+
+  void undoDrawing() {
+    if (state.allDrawings.isNotEmpty) {
+
+      var allDrawings = [...state.allDrawings];
+      var removed = allDrawings.removeLast();
+      state = state.copyWith(allDrawings: allDrawings, removedDrawing: removed, currentDrawing: null);
+      print(allDrawings);
+    }
+  }
+
+  void redoDrawing() {
+    if (state.removedDrawing != null) {
+      var drawings = state.allDrawings;
+      final newDrawings = [...drawings, state.removedDrawing!];
+
+      state = state.copyWith(allDrawings: newDrawings, removedDrawing: null);
     }
   }
 }

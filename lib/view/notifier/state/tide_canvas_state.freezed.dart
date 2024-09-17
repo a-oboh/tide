@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$TideCanvasState {
   TideDrawing? get currentDrawing => throw _privateConstructorUsedError;
+  TideDrawing? get removedDrawing => throw _privateConstructorUsedError;
   List<TideDrawing> get allDrawings => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -30,7 +31,10 @@ abstract class $TideCanvasStateCopyWith<$Res> {
           TideCanvasState value, $Res Function(TideCanvasState) then) =
       _$TideCanvasStateCopyWithImpl<$Res, TideCanvasState>;
   @useResult
-  $Res call({TideDrawing? currentDrawing, List<TideDrawing> allDrawings});
+  $Res call(
+      {TideDrawing? currentDrawing,
+      TideDrawing? removedDrawing,
+      List<TideDrawing> allDrawings});
 }
 
 /// @nodoc
@@ -47,12 +51,17 @@ class _$TideCanvasStateCopyWithImpl<$Res, $Val extends TideCanvasState>
   @override
   $Res call({
     Object? currentDrawing = freezed,
+    Object? removedDrawing = freezed,
     Object? allDrawings = null,
   }) {
     return _then(_value.copyWith(
       currentDrawing: freezed == currentDrawing
           ? _value.currentDrawing
           : currentDrawing // ignore: cast_nullable_to_non_nullable
+              as TideDrawing?,
+      removedDrawing: freezed == removedDrawing
+          ? _value.removedDrawing
+          : removedDrawing // ignore: cast_nullable_to_non_nullable
               as TideDrawing?,
       allDrawings: null == allDrawings
           ? _value.allDrawings
@@ -70,7 +79,10 @@ abstract class _$$TideCanvasStateImplCopyWith<$Res>
       __$$TideCanvasStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({TideDrawing? currentDrawing, List<TideDrawing> allDrawings});
+  $Res call(
+      {TideDrawing? currentDrawing,
+      TideDrawing? removedDrawing,
+      List<TideDrawing> allDrawings});
 }
 
 /// @nodoc
@@ -85,12 +97,17 @@ class __$$TideCanvasStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? currentDrawing = freezed,
+    Object? removedDrawing = freezed,
     Object? allDrawings = null,
   }) {
     return _then(_$TideCanvasStateImpl(
       currentDrawing: freezed == currentDrawing
           ? _value.currentDrawing
           : currentDrawing // ignore: cast_nullable_to_non_nullable
+              as TideDrawing?,
+      removedDrawing: freezed == removedDrawing
+          ? _value.removedDrawing
+          : removedDrawing // ignore: cast_nullable_to_non_nullable
               as TideDrawing?,
       allDrawings: null == allDrawings
           ? _value._allDrawings
@@ -104,11 +121,15 @@ class __$$TideCanvasStateImplCopyWithImpl<$Res>
 
 class _$TideCanvasStateImpl implements _TideCanvasState {
   const _$TideCanvasStateImpl(
-      {this.currentDrawing, final List<TideDrawing> allDrawings = const []})
+      {this.currentDrawing,
+      this.removedDrawing,
+      final List<TideDrawing> allDrawings = const []})
       : _allDrawings = allDrawings;
 
   @override
   final TideDrawing? currentDrawing;
+  @override
+  final TideDrawing? removedDrawing;
   final List<TideDrawing> _allDrawings;
   @override
   @JsonKey()
@@ -120,7 +141,7 @@ class _$TideCanvasStateImpl implements _TideCanvasState {
 
   @override
   String toString() {
-    return 'TideCanvasState(currentDrawing: $currentDrawing, allDrawings: $allDrawings)';
+    return 'TideCanvasState(currentDrawing: $currentDrawing, removedDrawing: $removedDrawing, allDrawings: $allDrawings)';
   }
 
   @override
@@ -130,12 +151,14 @@ class _$TideCanvasStateImpl implements _TideCanvasState {
             other is _$TideCanvasStateImpl &&
             (identical(other.currentDrawing, currentDrawing) ||
                 other.currentDrawing == currentDrawing) &&
+            (identical(other.removedDrawing, removedDrawing) ||
+                other.removedDrawing == removedDrawing) &&
             const DeepCollectionEquality()
                 .equals(other._allDrawings, _allDrawings));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, currentDrawing,
+  int get hashCode => Object.hash(runtimeType, currentDrawing, removedDrawing,
       const DeepCollectionEquality().hash(_allDrawings));
 
   @JsonKey(ignore: true)
@@ -149,10 +172,13 @@ class _$TideCanvasStateImpl implements _TideCanvasState {
 abstract class _TideCanvasState implements TideCanvasState {
   const factory _TideCanvasState(
       {final TideDrawing? currentDrawing,
+      final TideDrawing? removedDrawing,
       final List<TideDrawing> allDrawings}) = _$TideCanvasStateImpl;
 
   @override
   TideDrawing? get currentDrawing;
+  @override
+  TideDrawing? get removedDrawing;
   @override
   List<TideDrawing> get allDrawings;
   @override

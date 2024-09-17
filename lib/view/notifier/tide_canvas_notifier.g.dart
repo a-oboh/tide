@@ -7,7 +7,7 @@ part of 'tide_canvas_notifier.dart';
 // **************************************************************************
 
 String _$tideCanvasNotifierHash() =>
-    r'dc1cb64c6b8cfaa1489c60d14665fc14166afb05';
+    r'a042c250b7d286f9d053097f6eb8580dce389e17';
 
 /// See also [TideCanvasNotifier].
 @ProviderFor(TideCanvasNotifier)
