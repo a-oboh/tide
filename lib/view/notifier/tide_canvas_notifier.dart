@@ -1,4 +1,6 @@
+import 'package:drift/drift.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tide/core/domain/database/database.dart';
 import 'package:tide/core/domain/models/tide_canvas.dart';
 import 'package:tide/view/notifier/state/tide_canvas_state.dart';
 
@@ -24,7 +26,7 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
       var drawings = state.allDrawings;
       final newDrawings = [...drawings, drawing];
 
-      state = state.copyWith(allDrawings: newDrawings);
+      state = state.copyWith(allDrawings: newDrawings, currentDrawing: null);
     }
   }
 
@@ -50,5 +52,17 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
         removedDrawing: null,
       );
     }
+  }
+
+  Future<void> saveDrawing(String title, TideDrawing drawing) async {
+    final db = ref.read(dbProvider);
+
+    final canvasCompanion =
+        CanvasTableCompanion(title: Value(title), drawing: Value(drawing));
+    await db.into(db.canvasTable).insertOnConflictUpdate(canvasCompanion);
+  }
+
+  Future<void> allDrawings() async {
+    final db = ref.read(dbProvider);
   }
 }

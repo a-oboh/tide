@@ -35,6 +35,9 @@ abstract class $TideCanvasStateCopyWith<$Res> {
       {TideDrawing? currentDrawing,
       TideDrawing? removedDrawing,
       List<TideDrawing> allDrawings});
+
+  $TideDrawingCopyWith<$Res>? get currentDrawing;
+  $TideDrawingCopyWith<$Res>? get removedDrawing;
 }
 
 /// @nodoc
@@ -69,6 +72,30 @@ class _$TideCanvasStateCopyWithImpl<$Res, $Val extends TideCanvasState>
               as List<TideDrawing>,
     ) as $Val);
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $TideDrawingCopyWith<$Res>? get currentDrawing {
+    if (_value.currentDrawing == null) {
+      return null;
+    }
+
+    return $TideDrawingCopyWith<$Res>(_value.currentDrawing!, (value) {
+      return _then(_value.copyWith(currentDrawing: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $TideDrawingCopyWith<$Res>? get removedDrawing {
+    if (_value.removedDrawing == null) {
+      return null;
+    }
+
+    return $TideDrawingCopyWith<$Res>(_value.removedDrawing!, (value) {
+      return _then(_value.copyWith(removedDrawing: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -83,6 +110,11 @@ abstract class _$$TideCanvasStateImplCopyWith<$Res>
       {TideDrawing? currentDrawing,
       TideDrawing? removedDrawing,
       List<TideDrawing> allDrawings});
+
+  @override
+  $TideDrawingCopyWith<$Res>? get currentDrawing;
+  @override
+  $TideDrawingCopyWith<$Res>? get removedDrawing;
 }
 
 /// @nodoc

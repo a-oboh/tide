@@ -112,18 +112,29 @@ class CanvasPageToolSection extends ConsumerWidget {
           Tooltip(
             message: 'Eraser',
             child: IconButton(
-                onPressed: () {
-                  // activate eraser
-                  ref
-                      .read(tidePaintNotifierProvider.notifier)
-                      .setDrawingType(DrawingType.eraser);
-                },
-                icon: Icon(
-                  Icons.stay_current_landscape,
-                  color: drawingType == DrawingType.eraser
-                      ? TideColors.accentColor
-                      : TideColors.iconGrey,
-                )),
+              onPressed: () {
+                // activate eraser
+                ref
+                    .read(tidePaintNotifierProvider.notifier)
+                    .setDrawingType(DrawingType.eraser);
+              },
+              icon: Icon(
+                Icons.stay_current_landscape,
+                color: drawingType == DrawingType.eraser
+                    ? TideColors.primaryColor
+                    : TideColors.iconGrey,
+              ),
+            ),
+          ),
+          Tooltip(
+            message: 'Save',
+            child: IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.save,
+                color: TideColors.iconGrey,
+              ),
+            ),
           ),
           Tooltip(
             message: 'Color',
@@ -133,15 +144,26 @@ class CanvasPageToolSection extends ConsumerWidget {
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        content: ColorPicker(
-                          pickerColor:
-                              ref.watch(tidePaintNotifierProvider).pickerColor,
-                          onColorChanged: (Color value) {
-                            ref
-                                .read(tidePaintNotifierProvider.notifier)
-                                .setPaintColor(value);
-                          },
+                        content: IntrinsicHeight(
+                          child: ColorPicker(
+                            pickerColor: ref
+                                .watch(tidePaintNotifierProvider)
+                                .pickerColor,
+                            onColorChanged: (Color value) {
+                              ref
+                                  .read(tidePaintNotifierProvider.notifier)
+                                  .setPaintColor(value);
+                            },
+                          ),
                         ),
+                        actions: [
+                          FilledButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Done'),
+                          )
+                        ],
                       );
                     });
               },
