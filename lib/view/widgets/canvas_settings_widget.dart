@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tide/core/domain/models/tide_canvas.dart';
+import 'package:tide/core/domain/models/tide_drawing.dart';
 import 'package:tide/core/utils/colors.dart';
 import 'package:tide/core/utils/extensions.dart';
 import 'package:tide/view/notifier/tide_canvas_notifier.dart';
 import 'package:tide/view/notifier/tide_paint_notifier.dart';
+import 'package:tide/view/widgets/saved_canvases_view_widget.dart';
 
 class CanvasSettingsWidget extends ConsumerStatefulWidget {
   const CanvasSettingsWidget({super.key});
@@ -24,31 +25,15 @@ class _CanvasSettingsWidgetState extends ConsumerState<CanvasSettingsWidget> {
     return Container(
       child: Column(
         children: [
-          DropdownButton<String>(
-            items: const [
-              DropdownMenuItem(value: 'black', child: Text('black')),
-              DropdownMenuItem(value: 'red', child: Text('red')),
-              DropdownMenuItem(value: 'green', child: Text('green'))
-            ],
-            value: colorDropDownVal,
-            onChanged: (val) {
-              late Color color;
-
-              switch (val) {
-                case 'red':
-                  color = Colors.red;
-                  break;
-                case 'green':
-                  color = Colors.green;
-                default:
-                  color = Colors.black;
-              }
-              ref.read(tidePaintNotifierProvider.notifier).setPaintColor(color);
-              setState(() {
-                colorDropDownVal = val;
-              });
+          InkWell(
+            onTap: () {
+              ref.read(tideCanvasNotifierProvider.notifier).getSavedCanvases();
+              showDialog(
+                  context: context, builder: (ctx) => SavedCanvasesView());
             },
+            child: Text('Open drawing'),
           ),
+          10.height,
           DropdownButton<DrawingType>(
               value: pathTypeValue,
               items: const [
@@ -93,6 +78,7 @@ class CanvasPageToolSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final drawingType = ref.watch(tidePaintNotifierProvider).drawingType;
+    final tideDrawing = ref.watch(tideCanvasNotifierProvider).allDrawings;
 
     return Container(
       decoration: const BoxDecoration(color: TideColors.grey),
@@ -129,7 +115,14 @@ class CanvasPageToolSection extends ConsumerWidget {
           Tooltip(
             message: 'Save',
             child: IconButton(
-              onPressed: () {},
+              onPressed: () async {
+                final cacheExists = await ref
+                    .read(tideCanvasNotifierProvider.notifier)
+                    .cacheDrawingExists();
+                if (!cacheExists) {
+                  // ref.read(tideCanvasNotifierProvider.notifier).createNewEntry('draw title', );
+                }
+              },
               icon: Icon(
                 Icons.save,
                 color: TideColors.iconGrey,
