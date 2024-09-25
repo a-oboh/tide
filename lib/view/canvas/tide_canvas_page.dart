@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tide/core/domain/models/tide_canvas.dart';
+import 'package:tide/core/domain/models/tide_drawing.dart';
 import 'package:tide/view/notifier/tide_canvas_notifier.dart';
 import 'package:tide/view/notifier/tide_paint_notifier.dart';
 import 'package:tide/view/widgets/canvas_settings_widget.dart';
@@ -21,6 +21,7 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
   @override
   void initState() {
     super.initState();
+    //TODO: LOAD CACHED DRAWING ID
     aController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 200));
     paintSettingsPosition = Tween(begin: -1.0, end: 1.0).animate(aController);
@@ -95,7 +96,7 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
 
     return RepaintBoundary(
       child: CustomPaint(
-        painter: TideCanvasPainter(allDrawings: allDrawings ?? []),
+        painter: TideCanvasPainter(allDrawings: allDrawings.list),
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
@@ -142,19 +143,21 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
         var currentDrawing =
             ref.read(tideCanvasNotifierProvider).currentDrawing;
 
+        final List<Offset> drawingList =
+            List.from(currentDrawing?.currentDrawing ?? []);
+
         if (drawingType == DrawingType.triangle) {
           if (currentDrawing!.currentDrawing.length > 1) {
             currentDrawing.currentDrawing[1] = localPos;
           } else {
-            currentDrawing.currentDrawing.add(localPos);
+            drawingList.add(localPos);
           }
         } else {
-          currentDrawing?.currentDrawing.add(localPos);
+          drawingList.add(localPos);
         }
 
-        ref
-            .read(tideCanvasNotifierProvider.notifier)
-            .updateCurrentDrawing(currentDrawing);
+        ref.read(tideCanvasNotifierProvider.notifier).updateCurrentDrawing(
+            currentDrawing?.copyWith(currentDrawing: drawingList));
       },
       onPointerUp: (event) {
         var currentDrawing =

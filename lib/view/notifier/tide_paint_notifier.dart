@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tide/core/domain/models/tide_canvas.dart';
+import 'package:tide/core/domain/models/tide_drawing.dart';
 import 'package:tide/core/utils/colors.dart';
 import 'package:tide/view/notifier/state/tide_paint_state.dart';
 

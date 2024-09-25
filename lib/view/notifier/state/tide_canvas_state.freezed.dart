@@ -18,7 +18,11 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$TideCanvasState {
   TideDrawing? get currentDrawing => throw _privateConstructorUsedError;
   TideDrawing? get removedDrawing => throw _privateConstructorUsedError;
-  List<TideDrawing> get allDrawings => throw _privateConstructorUsedError;
+  int? get cachedDrawing => throw _privateConstructorUsedError;
+  TideDrawingList get allDrawings => throw _privateConstructorUsedError;
+  bool get loadingSavedCanvases => throw _privateConstructorUsedError;
+  bool get loadingCanvas => throw _privateConstructorUsedError;
+  List<CanvasTableData> get savedCanvases => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TideCanvasStateCopyWith<TideCanvasState> get copyWith =>
@@ -34,10 +38,15 @@ abstract class $TideCanvasStateCopyWith<$Res> {
   $Res call(
       {TideDrawing? currentDrawing,
       TideDrawing? removedDrawing,
-      List<TideDrawing> allDrawings});
+      int? cachedDrawing,
+      TideDrawingList allDrawings,
+      bool loadingSavedCanvases,
+      bool loadingCanvas,
+      List<CanvasTableData> savedCanvases});
 
   $TideDrawingCopyWith<$Res>? get currentDrawing;
   $TideDrawingCopyWith<$Res>? get removedDrawing;
+  $TideDrawingListCopyWith<$Res> get allDrawings;
 }
 
 /// @nodoc
@@ -55,7 +64,11 @@ class _$TideCanvasStateCopyWithImpl<$Res, $Val extends TideCanvasState>
   $Res call({
     Object? currentDrawing = freezed,
     Object? removedDrawing = freezed,
+    Object? cachedDrawing = freezed,
     Object? allDrawings = null,
+    Object? loadingSavedCanvases = null,
+    Object? loadingCanvas = null,
+    Object? savedCanvases = null,
   }) {
     return _then(_value.copyWith(
       currentDrawing: freezed == currentDrawing
@@ -66,10 +79,26 @@ class _$TideCanvasStateCopyWithImpl<$Res, $Val extends TideCanvasState>
           ? _value.removedDrawing
           : removedDrawing // ignore: cast_nullable_to_non_nullable
               as TideDrawing?,
+      cachedDrawing: freezed == cachedDrawing
+          ? _value.cachedDrawing
+          : cachedDrawing // ignore: cast_nullable_to_non_nullable
+              as int?,
       allDrawings: null == allDrawings
           ? _value.allDrawings
           : allDrawings // ignore: cast_nullable_to_non_nullable
-              as List<TideDrawing>,
+              as TideDrawingList,
+      loadingSavedCanvases: null == loadingSavedCanvases
+          ? _value.loadingSavedCanvases
+          : loadingSavedCanvases // ignore: cast_nullable_to_non_nullable
+              as bool,
+      loadingCanvas: null == loadingCanvas
+          ? _value.loadingCanvas
+          : loadingCanvas // ignore: cast_nullable_to_non_nullable
+              as bool,
+      savedCanvases: null == savedCanvases
+          ? _value.savedCanvases
+          : savedCanvases // ignore: cast_nullable_to_non_nullable
+              as List<CanvasTableData>,
     ) as $Val);
   }
 
@@ -96,6 +125,14 @@ class _$TideCanvasStateCopyWithImpl<$Res, $Val extends TideCanvasState>
       return _then(_value.copyWith(removedDrawing: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $TideDrawingListCopyWith<$Res> get allDrawings {
+    return $TideDrawingListCopyWith<$Res>(_value.allDrawings, (value) {
+      return _then(_value.copyWith(allDrawings: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -109,12 +146,18 @@ abstract class _$$TideCanvasStateImplCopyWith<$Res>
   $Res call(
       {TideDrawing? currentDrawing,
       TideDrawing? removedDrawing,
-      List<TideDrawing> allDrawings});
+      int? cachedDrawing,
+      TideDrawingList allDrawings,
+      bool loadingSavedCanvases,
+      bool loadingCanvas,
+      List<CanvasTableData> savedCanvases});
 
   @override
   $TideDrawingCopyWith<$Res>? get currentDrawing;
   @override
   $TideDrawingCopyWith<$Res>? get removedDrawing;
+  @override
+  $TideDrawingListCopyWith<$Res> get allDrawings;
 }
 
 /// @nodoc
@@ -130,7 +173,11 @@ class __$$TideCanvasStateImplCopyWithImpl<$Res>
   $Res call({
     Object? currentDrawing = freezed,
     Object? removedDrawing = freezed,
+    Object? cachedDrawing = freezed,
     Object? allDrawings = null,
+    Object? loadingSavedCanvases = null,
+    Object? loadingCanvas = null,
+    Object? savedCanvases = null,
   }) {
     return _then(_$TideCanvasStateImpl(
       currentDrawing: freezed == currentDrawing
@@ -141,10 +188,26 @@ class __$$TideCanvasStateImplCopyWithImpl<$Res>
           ? _value.removedDrawing
           : removedDrawing // ignore: cast_nullable_to_non_nullable
               as TideDrawing?,
+      cachedDrawing: freezed == cachedDrawing
+          ? _value.cachedDrawing
+          : cachedDrawing // ignore: cast_nullable_to_non_nullable
+              as int?,
       allDrawings: null == allDrawings
-          ? _value._allDrawings
+          ? _value.allDrawings
           : allDrawings // ignore: cast_nullable_to_non_nullable
-              as List<TideDrawing>,
+              as TideDrawingList,
+      loadingSavedCanvases: null == loadingSavedCanvases
+          ? _value.loadingSavedCanvases
+          : loadingSavedCanvases // ignore: cast_nullable_to_non_nullable
+              as bool,
+      loadingCanvas: null == loadingCanvas
+          ? _value.loadingCanvas
+          : loadingCanvas // ignore: cast_nullable_to_non_nullable
+              as bool,
+      savedCanvases: null == savedCanvases
+          ? _value._savedCanvases
+          : savedCanvases // ignore: cast_nullable_to_non_nullable
+              as List<CanvasTableData>,
     ));
   }
 }
@@ -155,25 +218,40 @@ class _$TideCanvasStateImpl implements _TideCanvasState {
   const _$TideCanvasStateImpl(
       {this.currentDrawing,
       this.removedDrawing,
-      final List<TideDrawing> allDrawings = const []})
-      : _allDrawings = allDrawings;
+      this.cachedDrawing,
+      this.allDrawings = const TideDrawingList(),
+      this.loadingSavedCanvases = false,
+      this.loadingCanvas = false,
+      final List<CanvasTableData> savedCanvases = const []})
+      : _savedCanvases = savedCanvases;
 
   @override
   final TideDrawing? currentDrawing;
   @override
   final TideDrawing? removedDrawing;
-  final List<TideDrawing> _allDrawings;
+  @override
+  final int? cachedDrawing;
   @override
   @JsonKey()
-  List<TideDrawing> get allDrawings {
-    if (_allDrawings is EqualUnmodifiableListView) return _allDrawings;
+  final TideDrawingList allDrawings;
+  @override
+  @JsonKey()
+  final bool loadingSavedCanvases;
+  @override
+  @JsonKey()
+  final bool loadingCanvas;
+  final List<CanvasTableData> _savedCanvases;
+  @override
+  @JsonKey()
+  List<CanvasTableData> get savedCanvases {
+    if (_savedCanvases is EqualUnmodifiableListView) return _savedCanvases;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_allDrawings);
+    return EqualUnmodifiableListView(_savedCanvases);
   }
 
   @override
   String toString() {
-    return 'TideCanvasState(currentDrawing: $currentDrawing, removedDrawing: $removedDrawing, allDrawings: $allDrawings)';
+    return 'TideCanvasState(currentDrawing: $currentDrawing, removedDrawing: $removedDrawing, cachedDrawing: $cachedDrawing, allDrawings: $allDrawings, loadingSavedCanvases: $loadingSavedCanvases, loadingCanvas: $loadingCanvas, savedCanvases: $savedCanvases)';
   }
 
   @override
@@ -185,13 +263,28 @@ class _$TideCanvasStateImpl implements _TideCanvasState {
                 other.currentDrawing == currentDrawing) &&
             (identical(other.removedDrawing, removedDrawing) ||
                 other.removedDrawing == removedDrawing) &&
+            (identical(other.cachedDrawing, cachedDrawing) ||
+                other.cachedDrawing == cachedDrawing) &&
+            (identical(other.allDrawings, allDrawings) ||
+                other.allDrawings == allDrawings) &&
+            (identical(other.loadingSavedCanvases, loadingSavedCanvases) ||
+                other.loadingSavedCanvases == loadingSavedCanvases) &&
+            (identical(other.loadingCanvas, loadingCanvas) ||
+                other.loadingCanvas == loadingCanvas) &&
             const DeepCollectionEquality()
-                .equals(other._allDrawings, _allDrawings));
+                .equals(other._savedCanvases, _savedCanvases));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, currentDrawing, removedDrawing,
-      const DeepCollectionEquality().hash(_allDrawings));
+  int get hashCode => Object.hash(
+      runtimeType,
+      currentDrawing,
+      removedDrawing,
+      cachedDrawing,
+      allDrawings,
+      loadingSavedCanvases,
+      loadingCanvas,
+      const DeepCollectionEquality().hash(_savedCanvases));
 
   @JsonKey(ignore: true)
   @override
@@ -205,14 +298,26 @@ abstract class _TideCanvasState implements TideCanvasState {
   const factory _TideCanvasState(
       {final TideDrawing? currentDrawing,
       final TideDrawing? removedDrawing,
-      final List<TideDrawing> allDrawings}) = _$TideCanvasStateImpl;
+      final int? cachedDrawing,
+      final TideDrawingList allDrawings,
+      final bool loadingSavedCanvases,
+      final bool loadingCanvas,
+      final List<CanvasTableData> savedCanvases}) = _$TideCanvasStateImpl;
 
   @override
   TideDrawing? get currentDrawing;
   @override
   TideDrawing? get removedDrawing;
   @override
-  List<TideDrawing> get allDrawings;
+  int? get cachedDrawing;
+  @override
+  TideDrawingList get allDrawings;
+  @override
+  bool get loadingSavedCanvases;
+  @override
+  bool get loadingCanvas;
+  @override
+  List<CanvasTableData> get savedCanvases;
   @override
   @JsonKey(ignore: true)
   _$$TideCanvasStateImplCopyWith<_$TideCanvasStateImpl> get copyWith =>

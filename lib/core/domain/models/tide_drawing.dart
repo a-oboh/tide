@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'tide_canvas.freezed.dart';
-part 'tide_canvas.g.dart';
+part 'tide_drawing.freezed.dart';
+
+part 'tide_drawing.g.dart';
+
+@freezed
+class TideDrawingList with _$TideDrawingList {
+  const factory TideDrawingList({
+    @Default([]) List<TideDrawing> list,
+  }) = _TideDrawingList;
+
+  factory TideDrawingList.fromJson(Map<String, dynamic> json) =>
+      _$TideDrawingListFromJson(json);
+}
 
 @freezed
 class TideDrawing with _$TideDrawing {
@@ -17,7 +28,6 @@ class TideDrawing with _$TideDrawing {
       _$TideDrawingFromJson(json);
 }
 
-
 class OffsetConverter implements JsonConverter<Offset, Map<String, dynamic>> {
   const OffsetConverter();
 
@@ -28,11 +38,10 @@ class OffsetConverter implements JsonConverter<Offset, Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson(Offset offset) => {
-    'dx': offset.dx,
-    'dy': offset.dy,
-  };
+        'dx': offset.dx,
+        'dy': offset.dy,
+      };
 }
-
 
 class PaintConverter implements JsonConverter<Paint, Map<String, dynamic>> {
   const PaintConverter();
@@ -42,15 +51,16 @@ class PaintConverter implements JsonConverter<Paint, Map<String, dynamic>> {
     return Paint()
       ..color = Color(json['color'] as int)
       ..strokeWidth = (json['strokeWidth'] as num).toDouble()
-      ..style = json['style'] == 'fill' ? PaintingStyle.fill : PaintingStyle.stroke;
+      ..style =
+          json['style'] == 'fill' ? PaintingStyle.fill : PaintingStyle.stroke;
   }
 
   @override
   Map<String, dynamic> toJson(Paint paint) => {
-    'color': paint.color.value,
-    'strokeWidth': paint.strokeWidth,
-    'style': paint.style == PaintingStyle.fill ? 'fill' : 'stroke',
-  };
+        'color': paint.color.value,
+        'strokeWidth': paint.strokeWidth,
+        'style': paint.style == PaintingStyle.fill ? 'fill' : 'stroke',
+      };
 }
 
 enum DrawingType {

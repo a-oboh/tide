@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:tide/core/domain/models/tide_canvas.dart';
+import 'package:tide/core/domain/models/tide_drawing.dart';
 
 part 'tide_paint_state.freezed.dart';
 

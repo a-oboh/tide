@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:tide/core/domain/models/tide_canvas.dart';
+import 'package:tide/core/domain/database/database.dart';
+import 'package:tide/core/domain/models/tide_drawing.dart';
 
 part 'tide_canvas_state.freezed.dart';
 
@@ -8,6 +9,10 @@ class TideCanvasState with _$TideCanvasState {
   const factory TideCanvasState({
     TideDrawing? currentDrawing,
     TideDrawing? removedDrawing,
-    @Default([]) List<TideDrawing> allDrawings,
+    int? cachedDrawing,
+    @Default(TideDrawingList()) TideDrawingList allDrawings,
+    @Default(false) bool loadingSavedCanvases,
+    @Default(false) bool loadingCanvas,
+    @Default([]) List<CanvasTableData> savedCanvases,
   }) = _TideCanvasState;
 }
