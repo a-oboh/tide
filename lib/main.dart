@@ -4,7 +4,7 @@ import 'package:tide/core/utils/colors.dart';
 import 'package:tide/view/canvas/tide_canvas_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -13,13 +13,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: TideColors.primaryColor),
         useMaterial3: true,
         scaffoldBackgroundColor: TideColors.scaffoldBg,
       ),
-      home: const ProviderScope(child: TideCanvasPage()),
+      home: TideCanvasPage(),
     );
   }
 }

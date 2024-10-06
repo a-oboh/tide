@@ -33,7 +33,7 @@ class TidePaintNotifier extends _$TidePaintNotifier {
         paint: Paint()
           ..color = color
           ..style = paint.style
-          ..strokeWidth = paint.strokeWidth,
+          ..strokeWidth = paint.strokeWidth + 5,
         pickerColor: color,
       );
     }

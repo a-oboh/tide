@@ -4,6 +4,7 @@ import 'package:tide/core/domain/models/tide_drawing.dart';
 import 'package:tide/view/notifier/tide_canvas_notifier.dart';
 import 'package:tide/view/notifier/tide_paint_notifier.dart';
 import 'package:tide/view/widgets/canvas_settings_widget.dart';
+import 'package:tide/view/widgets/overlay_page_loader.dart';
 
 class TideCanvasPage extends ConsumerStatefulWidget {
   const TideCanvasPage({super.key});
@@ -22,6 +23,7 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
   void initState() {
     super.initState();
     //TODO: LOAD CACHED DRAWING ID
+
     aController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 200));
     paintSettingsPosition = Tween(begin: -1.0, end: 1.0).animate(aController);
@@ -32,54 +34,75 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final canvasState = ref.read(tideCanvasNotifierProvider);
+      final cachedCanvas =
+          ref.read(tideCanvasNotifierProvider.notifier).getCachedCanvas();
 
       currentDrawing = canvasState.currentDrawing;
     });
   }
+
+  isDialogActive(BuildContext context) =>
+      ModalRoute.of(context)?.isCurrent != true;
 
   TideDrawing? currentDrawing;
 
   @override
   Widget build(BuildContext context) {
     var paintState = ref.watch(tidePaintNotifierProvider);
+    var state = ref.watch(tideCanvasNotifierProvider);
+
+    ref.listen(tideCanvasNotifierProvider, (prev, state) {
+      if (prev?.loadingCanvas == true && state.saveNewCanvasError) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error saving new canvas')));
+      } else if (prev?.loadingCanvas == true && state.newDrawingSaved) {
+        // pop if dialog is showing
+        if (isDialogActive(context)) {
+          Navigator.of(context).pop();
+        }
+      }
+    });
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            const CanvasPageToolSection(),
-            Expanded(
-              child: Stack(
-                children: [
-                  buildAllPoints(),
-                  buildCurrentPath(
-                    ref: ref,
-                  ),
-                  AnimatedBuilder(
-                      animation: paintSettingsPosition,
-                      builder: (context, child) {
-                        return Transform.translate(
-                          offset: Offset(0, 50 * paintSettingsPosition.value),
-                          child: Opacity(
-                            opacity: paintSettingsOpacity.value,
-                            child: const CanvasSettingsWidget(),
-                          ),
-                        );
-                      }),
-                  IconButton(
-                    onPressed: () {
-                      if (aController.value > 0.5) {
-                        aController.reverse();
-                      } else {
-                        aController.forward(from: 0.0);
-                      }
-                    },
-                    icon: const Icon(Icons.menu),
-                  ),
-                ],
+        child: PageOverlayLoader(
+          loading: state.loadingCanvas,
+          child: Column(
+            children: [
+              const CanvasPageToolSection(),
+              Expanded(
+                child: Stack(
+                  children: [
+                    buildAllPoints(),
+                    buildCurrentPath(
+                      ref: ref,
+                    ),
+                    AnimatedBuilder(
+                        animation: paintSettingsPosition,
+                        builder: (context, child) {
+                          return Transform.translate(
+                            offset: Offset(0, 50 * paintSettingsPosition.value),
+                            child: Opacity(
+                              opacity: paintSettingsOpacity.value,
+                              child: const CanvasSettingsWidget(),
+                            ),
+                          );
+                        }),
+                    IconButton(
+                      onPressed: () {
+                        if (aController.value > 0.5) {
+                          aController.reverse();
+                        } else {
+                          aController.forward(from: 0.0);
+                        }
+                      },
+                      icon: const Icon(Icons.menu),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -30,6 +30,14 @@ class $CanvasTableTable extends CanvasTable
       GeneratedColumn<String>('drawing', aliasedName, false,
               type: DriftSqlType.string, requiredDuringInsert: true)
           .withConverter<TideDrawing>($CanvasTableTable.$converterdrawing);
+  static const VerificationMeta _drawingListMeta =
+      const VerificationMeta('drawingList');
+  @override
+  late final GeneratedColumnWithTypeConverter<TideDrawingList, String>
+      drawingList = GeneratedColumn<String>('drawing_list', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<TideDrawingList>(
+              $CanvasTableTable.$converterdrawingList);
   static const VerificationMeta _createdAtMeta =
       const VerificationMeta('createdAt');
   @override
@@ -39,7 +47,8 @@ class $CanvasTableTable extends CanvasTable
       requiredDuringInsert: false,
       clientDefault: () => DateTime.now());
   @override
-  List<GeneratedColumn> get $columns => [id, title, drawing, createdAt];
+  List<GeneratedColumn> get $columns =>
+      [id, title, drawing, drawingList, createdAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -60,6 +69,7 @@ class $CanvasTableTable extends CanvasTable
       context.missing(_titleMeta);
     }
     context.handle(_drawingMeta, const VerificationResult.success());
+    context.handle(_drawingListMeta, const VerificationResult.success());
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
@@ -80,6 +90,9 @@ class $CanvasTableTable extends CanvasTable
       drawing: $CanvasTableTable.$converterdrawing.fromSql(attachedDatabase
           .typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}drawing'])!),
+      drawingList: $CanvasTableTable.$converterdrawingList.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.string, data['${effectivePrefix}drawing_list'])!),
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
     );
@@ -92,17 +105,21 @@ class $CanvasTableTable extends CanvasTable
 
   static TypeConverter<TideDrawing, String> $converterdrawing =
       const DrawingConverter();
+  static TypeConverter<TideDrawingList, String> $converterdrawingList =
+      const DrawingListConverter();
 }
 
 class CanvasTableData extends DataClass implements Insertable<CanvasTableData> {
   final int id;
   final String title;
   final TideDrawing drawing;
+  final TideDrawingList drawingList;
   final DateTime createdAt;
   const CanvasTableData(
       {required this.id,
       required this.title,
       required this.drawing,
+      required this.drawingList,
       required this.createdAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -113,6 +130,10 @@ class CanvasTableData extends DataClass implements Insertable<CanvasTableData> {
       map['drawing'] =
           Variable<String>($CanvasTableTable.$converterdrawing.toSql(drawing));
     }
+    {
+      map['drawing_list'] = Variable<String>(
+          $CanvasTableTable.$converterdrawingList.toSql(drawingList));
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -122,6 +143,7 @@ class CanvasTableData extends DataClass implements Insertable<CanvasTableData> {
       id: Value(id),
       title: Value(title),
       drawing: Value(drawing),
+      drawingList: Value(drawingList),
       createdAt: Value(createdAt),
     );
   }
@@ -133,6 +155,7 @@ class CanvasTableData extends DataClass implements Insertable<CanvasTableData> {
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       drawing: serializer.fromJson<TideDrawing>(json['drawing']),
+      drawingList: serializer.fromJson<TideDrawingList>(json['drawingList']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -143,6 +166,7 @@ class CanvasTableData extends DataClass implements Insertable<CanvasTableData> {
       'id': serializer.toJson<int>(id),
       'title': serializer.toJson<String>(title),
       'drawing': serializer.toJson<TideDrawing>(drawing),
+      'drawingList': serializer.toJson<TideDrawingList>(drawingList),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -151,11 +175,13 @@ class CanvasTableData extends DataClass implements Insertable<CanvasTableData> {
           {int? id,
           String? title,
           TideDrawing? drawing,
+          TideDrawingList? drawingList,
           DateTime? createdAt}) =>
       CanvasTableData(
         id: id ?? this.id,
         title: title ?? this.title,
         drawing: drawing ?? this.drawing,
+        drawingList: drawingList ?? this.drawingList,
         createdAt: createdAt ?? this.createdAt,
       );
   CanvasTableData copyWithCompanion(CanvasTableCompanion data) {
@@ -163,6 +189,8 @@ class CanvasTableData extends DataClass implements Insertable<CanvasTableData> {
       id: data.id.present ? data.id.value : this.id,
       title: data.title.present ? data.title.value : this.title,
       drawing: data.drawing.present ? data.drawing.value : this.drawing,
+      drawingList:
+          data.drawingList.present ? data.drawingList.value : this.drawingList,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -173,13 +201,14 @@ class CanvasTableData extends DataClass implements Insertable<CanvasTableData> {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('drawing: $drawing, ')
+          ..write('drawingList: $drawingList, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, title, drawing, createdAt);
+  int get hashCode => Object.hash(id, title, drawing, drawingList, createdAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -187,6 +216,7 @@ class CanvasTableData extends DataClass implements Insertable<CanvasTableData> {
           other.id == this.id &&
           other.title == this.title &&
           other.drawing == this.drawing &&
+          other.drawingList == this.drawingList &&
           other.createdAt == this.createdAt);
 }
 
@@ -194,30 +224,36 @@ class CanvasTableCompanion extends UpdateCompanion<CanvasTableData> {
   final Value<int> id;
   final Value<String> title;
   final Value<TideDrawing> drawing;
+  final Value<TideDrawingList> drawingList;
   final Value<DateTime> createdAt;
   const CanvasTableCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.drawing = const Value.absent(),
+    this.drawingList = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   CanvasTableCompanion.insert({
     this.id = const Value.absent(),
     required String title,
     required TideDrawing drawing,
+    required TideDrawingList drawingList,
     this.createdAt = const Value.absent(),
   })  : title = Value(title),
-        drawing = Value(drawing);
+        drawing = Value(drawing),
+        drawingList = Value(drawingList);
   static Insertable<CanvasTableData> custom({
     Expression<int>? id,
     Expression<String>? title,
     Expression<String>? drawing,
+    Expression<String>? drawingList,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (title != null) 'title': title,
       if (drawing != null) 'drawing': drawing,
+      if (drawingList != null) 'drawing_list': drawingList,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
@@ -226,11 +262,13 @@ class CanvasTableCompanion extends UpdateCompanion<CanvasTableData> {
       {Value<int>? id,
       Value<String>? title,
       Value<TideDrawing>? drawing,
+      Value<TideDrawingList>? drawingList,
       Value<DateTime>? createdAt}) {
     return CanvasTableCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
       drawing: drawing ?? this.drawing,
+      drawingList: drawingList ?? this.drawingList,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -248,6 +286,10 @@ class CanvasTableCompanion extends UpdateCompanion<CanvasTableData> {
       map['drawing'] = Variable<String>(
           $CanvasTableTable.$converterdrawing.toSql(drawing.value));
     }
+    if (drawingList.present) {
+      map['drawing_list'] = Variable<String>(
+          $CanvasTableTable.$converterdrawingList.toSql(drawingList.value));
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -260,6 +302,7 @@ class CanvasTableCompanion extends UpdateCompanion<CanvasTableData> {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('drawing: $drawing, ')
+          ..write('drawingList: $drawingList, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -282,6 +325,7 @@ typedef $$CanvasTableTableCreateCompanionBuilder = CanvasTableCompanion
   Value<int> id,
   required String title,
   required TideDrawing drawing,
+  required TideDrawingList drawingList,
   Value<DateTime> createdAt,
 });
 typedef $$CanvasTableTableUpdateCompanionBuilder = CanvasTableCompanion
@@ -289,6 +333,7 @@ typedef $$CanvasTableTableUpdateCompanionBuilder = CanvasTableCompanion
   Value<int> id,
   Value<String> title,
   Value<TideDrawing> drawing,
+  Value<TideDrawingList> drawingList,
   Value<DateTime> createdAt,
 });
 
@@ -308,6 +353,13 @@ class $$CanvasTableTableFilterComposer
   ColumnWithTypeConverterFilters<TideDrawing, TideDrawing, String>
       get drawing => $state.composableBuilder(
           column: $state.table.drawing,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
+
+  ColumnWithTypeConverterFilters<TideDrawingList, TideDrawingList, String>
+      get drawingList => $state.composableBuilder(
+          column: $state.table.drawingList,
           builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
               column,
               joinBuilders: joinBuilders));
@@ -333,6 +385,11 @@ class $$CanvasTableTableOrderingComposer
 
   ColumnOrderings<String> get drawing => $state.composableBuilder(
       column: $state.table.drawing,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get drawingList => $state.composableBuilder(
+      column: $state.table.drawingList,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -368,24 +425,28 @@ class $$CanvasTableTableTableManager extends RootTableManager<
             Value<int> id = const Value.absent(),
             Value<String> title = const Value.absent(),
             Value<TideDrawing> drawing = const Value.absent(),
+            Value<TideDrawingList> drawingList = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
           }) =>
               CanvasTableCompanion(
             id: id,
             title: title,
             drawing: drawing,
+            drawingList: drawingList,
             createdAt: createdAt,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
             required String title,
             required TideDrawing drawing,
+            required TideDrawingList drawingList,
             Value<DateTime> createdAt = const Value.absent(),
           }) =>
               CanvasTableCompanion.insert(
             id: id,
             title: title,
             drawing: drawing,
+            drawingList: drawingList,
             createdAt: createdAt,
           ),
           withReferenceMapper: (p0) => p0
