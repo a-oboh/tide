@@ -53,12 +53,16 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
 
     ref.listen(tideCanvasNotifierProvider, (prev, state) {
       if (prev?.loadingCanvas == true && state.saveNewCanvasError) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Error saving new canvas')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Error saving new canvas'),
+          backgroundColor: Colors.red,
+        ));
       } else if (prev?.loadingCanvas == true && state.newDrawingSaved) {
         // pop if dialog is showing
         if (isDialogActive(context)) {
           Navigator.of(context).pop();
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('New canvas created!')));
         }
       }
     });
