@@ -123,12 +123,15 @@ class CanvasPageToolSection extends ConsumerWidget {
                     .read(tideCanvasNotifierProvider.notifier)
                     .cacheDrawingExists();
 
-                if (!cacheExists) {
+                if (cacheExists == false) {
                   showNewDrawingDialog(context);
 
                   print('no cache available');
                 } else {
                   //update local
+                  ref.read(tideCanvasNotifierProvider.notifier).saveDrawing(
+                      drawingList:
+                          ref.read(tideCanvasNotifierProvider).allDrawings);
                 }
               },
               icon: Icon(

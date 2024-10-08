@@ -52,17 +52,27 @@ class _TideCanvasPageState extends ConsumerState<TideCanvasPage>
     var state = ref.watch(tideCanvasNotifierProvider);
 
     ref.listen(tideCanvasNotifierProvider, (prev, state) {
-      if (prev?.loadingCanvas == true && state.saveNewCanvasError) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Error saving new canvas'),
-          backgroundColor: Colors.red,
-        ));
-      } else if (prev?.loadingCanvas == true && state.newDrawingSaved) {
-        // pop if dialog is showing
-        if (isDialogActive(context)) {
-          Navigator.of(context).pop();
+      if (prev?.loadingCanvas == true) {
+        if (state.saveNewCanvasError) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Error saving new canvas'),
+            backgroundColor: Colors.red,
+          ));
+        } else if (state.newDrawingSaved) {
+          // pop if dialog is showing
+          if (isDialogActive(context)) {
+            Navigator.of(context).pop();
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('New canvas created!')));
+          }
+        } else if (state.updateLocalDrawingError) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Error saving canvas'),
+            backgroundColor: Colors.red,
+          ));
+        } else if (state.updatedLocalDrawing) {
           ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('New canvas created!')));
+              .showSnackBar(SnackBar(content: Text('Canvas saved')));
         }
       }
     });
