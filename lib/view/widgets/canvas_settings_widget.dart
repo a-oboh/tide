@@ -33,6 +33,7 @@ class _CanvasSettingsWidgetState extends ConsumerState<CanvasSettingsWidget> {
               ref.read(tideCanvasNotifierProvider.notifier).getSavedCanvases();
               showDialog(
                   context: context, builder: (ctx) => SavedCanvasesView());
+
             },
             child: Text('Open drawing'),
           ),

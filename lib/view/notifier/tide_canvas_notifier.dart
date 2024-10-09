@@ -160,4 +160,6 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
       }
     }
   }
+
+
 }
