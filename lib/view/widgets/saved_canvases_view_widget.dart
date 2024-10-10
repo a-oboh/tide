@@ -31,7 +31,11 @@ class SavedCanvasesView extends ConsumerWidget {
               )
             else ...[
               Expanded(
-                child: buildSavedCanvasList(tideCanvasState.savedCanvases, ref),
+                child: buildSavedCanvasList(
+                  savedCanvases: tideCanvasState.savedCanvases,
+                  ref: ref,
+                  context: context,
+                ),
               )
             ],
           ],
@@ -40,7 +44,10 @@ class SavedCanvasesView extends ConsumerWidget {
     );
   }
 
-  buildSavedCanvasList(List<CanvasTableData> savedCanvases, WidgetRef ref) {
+  buildSavedCanvasList(
+      {required List<CanvasTableData> savedCanvases,
+      required WidgetRef ref,
+      required BuildContext context}) {
     if (savedCanvases.isEmpty) {
       return const Center(
           child: Text(
@@ -56,13 +63,15 @@ class SavedCanvasesView extends ConsumerWidget {
         children: savedCanvases
             .map((canvas) => ListTile(
                   onTap: () {
-                    // TODO: load onto canvas
-                    // showDialog(context: context, builder: builder)
                     ref
                         .read(tideCanvasNotifierProvider.notifier)
                         .loadCurrentDrawingData(
-                            currentDrawing: canvas.drawing,
-                            drawingList: canvas.drawingList);
+                          currentDrawing: canvas.drawing,
+                          drawingList: canvas.drawingList,
+                          drawingId: canvas.id,
+                        );
+
+                    Navigator.of(context).pop();
                   },
                   title: Text(canvas.title),
                 ))

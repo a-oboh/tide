@@ -161,10 +161,14 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
     }
   }
 
-  void loadCurrentDrawingData(
-      {required TideDrawing currentDrawing,
-      required TideDrawingList drawingList}) {
+  void loadCurrentDrawingData({
+    required TideDrawing currentDrawing,
+    required TideDrawingList drawingList,
+    required int drawingId,
+  }) {
     state = state.copyWith(
-        currentDrawing: currentDrawing, allDrawings: drawingList);
+        currentDrawing: currentDrawing,
+        allDrawings: drawingList,
+        cachedDrawing: drawingId);
   }
 }
