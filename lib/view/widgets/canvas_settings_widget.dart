@@ -33,6 +33,7 @@ class _CanvasSettingsWidgetState extends ConsumerState<CanvasSettingsWidget> {
               ref.read(tideCanvasNotifierProvider.notifier).getSavedCanvases();
               showDialog(
                   context: context, builder: (ctx) => SavedCanvasesView());
+
             },
             child: Text('Open drawing'),
           ),
@@ -122,13 +123,17 @@ class CanvasPageToolSection extends ConsumerWidget {
                 final cacheExists = await ref
                     .read(tideCanvasNotifierProvider.notifier)
                     .cacheDrawingExists();
-                showNewDrawingDialog(context);
-                if (!cacheExists) {
 
+                if (cacheExists == false) {
+                  showNewDrawingDialog(context);
 
                   print('no cache available');
+                } else {
+                  //update local
+                  ref.read(tideCanvasNotifierProvider.notifier).saveDrawing(
+                      drawingList:
+                          ref.read(tideCanvasNotifierProvider).allDrawings);
                 }
-                print(' cache available');
               },
               icon: Icon(
                 Icons.save,

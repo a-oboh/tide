@@ -15,6 +15,8 @@ class TideCanvasState with _$TideCanvasState {
     @Default(false) bool loadingCanvas,
     @Default(false) bool saveNewCanvasError,
     @Default(false) bool newDrawingSaved,
+    @Default(false) bool updatedLocalDrawing,
+    @Default(false) bool updateLocalDrawingError,
     @Default([]) List<CanvasTableData> savedCanvases,
   }) = _TideCanvasState;
 }

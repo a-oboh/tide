@@ -67,7 +67,7 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
 
     state = state.copyWith(cachedDrawing: cachedDrawingId);
 
-    return cachedDrawingId == null;
+    return cachedDrawingId != null;
   }
 
   onDrawingTitleChnaged() {}
@@ -101,23 +101,36 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
     }
   }
 
-  Future<void> saveDrawing(TideDrawing drawing) async {
-    state = state.copyWith(loadingCanvas: true);
-    final db = ref.read(dbProvider);
-    final int? cachedDrawingId = state.cachedDrawing;
+  Future<void> saveDrawing(
+      {TideDrawing? drawing, required TideDrawingList drawingList}) async {
+    try {
+      state = state.copyWith(loadingCanvas: true);
+      final db = ref.read(dbProvider);
+      final int? cachedDrawingId = state.cachedDrawing;
 
-    if (cachedDrawingId != null) {
-      final companion = CanvasTableCompanion(
-          drawing: Value(
-        drawing,
-      ));
+      if (cachedDrawingId != null) {
+        final companion = CanvasTableCompanion(
+            drawingList: Value(drawingList),
+            drawing: Value(
+              drawing ?? drawingList.list.last,
+            ));
 
-      //update drawing
-      await (db.update(db.canvasTable)
-            ..where((d) => d.id.equals(cachedDrawingId)))
-          .write(companion);
+        //update drawing
+        await (db.update(db.canvasTable)
+              ..where((d) => d.id.equals(cachedDrawingId)))
+            .write(companion);
 
-      state = state.copyWith(loadingCanvas: false);
+        state = state.copyWith(
+          loadingCanvas: false,
+          updatedLocalDrawing: true,
+        );
+      }
+    } catch (e) {
+      state = state.copyWith(
+        loadingCanvas: false,
+        saveNewCanvasError: true,
+        updateLocalDrawingError: true,
+      );
     }
   }
 
@@ -146,5 +159,16 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
         // state = state.copyWith(allDrawings: data.);
       }
     }
+  }
+
+  void loadCurrentDrawingData({
+    required TideDrawing currentDrawing,
+    required TideDrawingList drawingList,
+    required int drawingId,
+  }) {
+    state = state.copyWith(
+        currentDrawing: currentDrawing,
+        allDrawings: drawingList,
+        cachedDrawing: drawingId);
   }
 }

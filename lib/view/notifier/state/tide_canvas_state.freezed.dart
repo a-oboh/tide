@@ -24,6 +24,8 @@ mixin _$TideCanvasState {
   bool get loadingCanvas => throw _privateConstructorUsedError;
   bool get saveNewCanvasError => throw _privateConstructorUsedError;
   bool get newDrawingSaved => throw _privateConstructorUsedError;
+  bool get updatedLocalDrawing => throw _privateConstructorUsedError;
+  bool get updateLocalDrawingError => throw _privateConstructorUsedError;
   List<CanvasTableData> get savedCanvases => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -46,6 +48,8 @@ abstract class $TideCanvasStateCopyWith<$Res> {
       bool loadingCanvas,
       bool saveNewCanvasError,
       bool newDrawingSaved,
+      bool updatedLocalDrawing,
+      bool updateLocalDrawingError,
       List<CanvasTableData> savedCanvases});
 
   $TideDrawingCopyWith<$Res>? get currentDrawing;
@@ -74,6 +78,8 @@ class _$TideCanvasStateCopyWithImpl<$Res, $Val extends TideCanvasState>
     Object? loadingCanvas = null,
     Object? saveNewCanvasError = null,
     Object? newDrawingSaved = null,
+    Object? updatedLocalDrawing = null,
+    Object? updateLocalDrawingError = null,
     Object? savedCanvases = null,
   }) {
     return _then(_value.copyWith(
@@ -108,6 +114,14 @@ class _$TideCanvasStateCopyWithImpl<$Res, $Val extends TideCanvasState>
       newDrawingSaved: null == newDrawingSaved
           ? _value.newDrawingSaved
           : newDrawingSaved // ignore: cast_nullable_to_non_nullable
+              as bool,
+      updatedLocalDrawing: null == updatedLocalDrawing
+          ? _value.updatedLocalDrawing
+          : updatedLocalDrawing // ignore: cast_nullable_to_non_nullable
+              as bool,
+      updateLocalDrawingError: null == updateLocalDrawingError
+          ? _value.updateLocalDrawingError
+          : updateLocalDrawingError // ignore: cast_nullable_to_non_nullable
               as bool,
       savedCanvases: null == savedCanvases
           ? _value.savedCanvases
@@ -166,6 +180,8 @@ abstract class _$$TideCanvasStateImplCopyWith<$Res>
       bool loadingCanvas,
       bool saveNewCanvasError,
       bool newDrawingSaved,
+      bool updatedLocalDrawing,
+      bool updateLocalDrawingError,
       List<CanvasTableData> savedCanvases});
 
   @override
@@ -195,6 +211,8 @@ class __$$TideCanvasStateImplCopyWithImpl<$Res>
     Object? loadingCanvas = null,
     Object? saveNewCanvasError = null,
     Object? newDrawingSaved = null,
+    Object? updatedLocalDrawing = null,
+    Object? updateLocalDrawingError = null,
     Object? savedCanvases = null,
   }) {
     return _then(_$TideCanvasStateImpl(
@@ -230,6 +248,14 @@ class __$$TideCanvasStateImplCopyWithImpl<$Res>
           ? _value.newDrawingSaved
           : newDrawingSaved // ignore: cast_nullable_to_non_nullable
               as bool,
+      updatedLocalDrawing: null == updatedLocalDrawing
+          ? _value.updatedLocalDrawing
+          : updatedLocalDrawing // ignore: cast_nullable_to_non_nullable
+              as bool,
+      updateLocalDrawingError: null == updateLocalDrawingError
+          ? _value.updateLocalDrawingError
+          : updateLocalDrawingError // ignore: cast_nullable_to_non_nullable
+              as bool,
       savedCanvases: null == savedCanvases
           ? _value._savedCanvases
           : savedCanvases // ignore: cast_nullable_to_non_nullable
@@ -250,6 +276,8 @@ class _$TideCanvasStateImpl implements _TideCanvasState {
       this.loadingCanvas = false,
       this.saveNewCanvasError = false,
       this.newDrawingSaved = false,
+      this.updatedLocalDrawing = false,
+      this.updateLocalDrawingError = false,
       final List<CanvasTableData> savedCanvases = const []})
       : _savedCanvases = savedCanvases;
 
@@ -274,6 +302,12 @@ class _$TideCanvasStateImpl implements _TideCanvasState {
   @override
   @JsonKey()
   final bool newDrawingSaved;
+  @override
+  @JsonKey()
+  final bool updatedLocalDrawing;
+  @override
+  @JsonKey()
+  final bool updateLocalDrawingError;
   final List<CanvasTableData> _savedCanvases;
   @override
   @JsonKey()
@@ -285,7 +319,7 @@ class _$TideCanvasStateImpl implements _TideCanvasState {
 
   @override
   String toString() {
-    return 'TideCanvasState(currentDrawing: $currentDrawing, removedDrawing: $removedDrawing, cachedDrawing: $cachedDrawing, allDrawings: $allDrawings, loadingSavedCanvases: $loadingSavedCanvases, loadingCanvas: $loadingCanvas, saveNewCanvasError: $saveNewCanvasError, newDrawingSaved: $newDrawingSaved, savedCanvases: $savedCanvases)';
+    return 'TideCanvasState(currentDrawing: $currentDrawing, removedDrawing: $removedDrawing, cachedDrawing: $cachedDrawing, allDrawings: $allDrawings, loadingSavedCanvases: $loadingSavedCanvases, loadingCanvas: $loadingCanvas, saveNewCanvasError: $saveNewCanvasError, newDrawingSaved: $newDrawingSaved, updatedLocalDrawing: $updatedLocalDrawing, updateLocalDrawingError: $updateLocalDrawingError, savedCanvases: $savedCanvases)';
   }
 
   @override
@@ -309,6 +343,11 @@ class _$TideCanvasStateImpl implements _TideCanvasState {
                 other.saveNewCanvasError == saveNewCanvasError) &&
             (identical(other.newDrawingSaved, newDrawingSaved) ||
                 other.newDrawingSaved == newDrawingSaved) &&
+            (identical(other.updatedLocalDrawing, updatedLocalDrawing) ||
+                other.updatedLocalDrawing == updatedLocalDrawing) &&
+            (identical(
+                    other.updateLocalDrawingError, updateLocalDrawingError) ||
+                other.updateLocalDrawingError == updateLocalDrawingError) &&
             const DeepCollectionEquality()
                 .equals(other._savedCanvases, _savedCanvases));
   }
@@ -324,6 +363,8 @@ class _$TideCanvasStateImpl implements _TideCanvasState {
       loadingCanvas,
       saveNewCanvasError,
       newDrawingSaved,
+      updatedLocalDrawing,
+      updateLocalDrawingError,
       const DeepCollectionEquality().hash(_savedCanvases));
 
   @JsonKey(ignore: true)
@@ -344,6 +385,8 @@ abstract class _TideCanvasState implements TideCanvasState {
       final bool loadingCanvas,
       final bool saveNewCanvasError,
       final bool newDrawingSaved,
+      final bool updatedLocalDrawing,
+      final bool updateLocalDrawingError,
       final List<CanvasTableData> savedCanvases}) = _$TideCanvasStateImpl;
 
   @override
@@ -362,6 +405,10 @@ abstract class _TideCanvasState implements TideCanvasState {
   bool get saveNewCanvasError;
   @override
   bool get newDrawingSaved;
+  @override
+  bool get updatedLocalDrawing;
+  @override
+  bool get updateLocalDrawingError;
   @override
   List<CanvasTableData> get savedCanvases;
   @override
