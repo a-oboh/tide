@@ -6,8 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tide/core/domain/models/tide_drawing.dart';
 import 'package:tide/core/utils/colors.dart';
 import 'package:tide/core/utils/extensions.dart';
-import 'package:tide/view/notifier/tide_canvas_notifier.dart';
-import 'package:tide/view/notifier/tide_paint_notifier.dart';
+import 'package:tide/view/canvas/notifier/tide_canvas_notifier.dart';
+import 'package:tide/view/canvas/notifier/tide_paint_notifier.dart';
 import 'package:tide/view/widgets/new_drawing_modal.dart';
 import 'package:tide/view/widgets/saved_canvases_view_widget.dart';
 

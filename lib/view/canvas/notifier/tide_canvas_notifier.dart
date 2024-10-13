@@ -6,7 +6,7 @@ import 'package:tide/core/domain/database/database.dart';
 import 'package:tide/core/domain/models/tide_drawing.dart';
 import 'package:tide/core/services/prefs_service.dart';
 import 'package:tide/core/utils/strings.dart';
-import 'package:tide/view/notifier/state/tide_canvas_state.dart';
+import 'package:tide/view/canvas/notifier/state/tide_canvas_state.dart';
 
 part 'tide_canvas_notifier.g.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tide/core/domain/models/tide_drawing.dart';
-import 'package:tide/view/notifier/tide_canvas_notifier.dart';
-import 'package:tide/view/notifier/tide_paint_notifier.dart';
+import 'package:tide/view/canvas/notifier/tide_canvas_notifier.dart';
+import 'package:tide/view/canvas/notifier/tide_paint_notifier.dart';
 import 'package:tide/view/widgets/canvas_settings_widget.dart';
 import 'package:tide/view/widgets/overlay_page_loader.dart';
 

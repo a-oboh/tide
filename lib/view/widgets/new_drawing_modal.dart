@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:tide/view/notifier/tide_canvas_notifier.dart';
+import 'package:tide/view/canvas/notifier/tide_canvas_notifier.dart';
 
 showNewDrawingDialog(
   BuildContext context,
