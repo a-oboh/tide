@@ -20,6 +20,7 @@ dependencies:
   json_annotation: ^4.9.0
   shared_preferences: ^2.3.2
   gap: ^3.0.1
+  mockito: ^5.4.4
   
 
 dev_dependencies:
