@@ -8,7 +8,7 @@ import 'package:tide/core/domain/models/tide_drawing.dart';
 part 'canvas_dao.g.dart';
 
 @DriftAccessor(tables: [CanvasTable])
-class CanvasDao extends DatabaseAccessor<AppDatabase> with _$DrawingDaoMixin {
+class CanvasDao extends DatabaseAccessor<AppDatabase> with _$CanvasDaoMixin {
   CanvasDao(db) : super(db);
 
   Future<int> createDrawing(
@@ -66,6 +66,6 @@ class CanvasDao extends DatabaseAccessor<AppDatabase> with _$DrawingDaoMixin {
 }
 
 @riverpod
-CanvasDao canvasDao(DrawingDaoRef ref){
+CanvasDao canvasDao(CanvasDaoRef ref){
 return CanvasDao( ref.read(dbProvider));
 }

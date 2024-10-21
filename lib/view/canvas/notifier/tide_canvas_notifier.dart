@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:drift/drift.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tide/core/domain/database/dao/canvas_dao.dart';
 import 'package:tide/core/domain/database/database.dart';
 import 'package:tide/core/domain/models/tide_drawing.dart';
 import 'package:tide/core/services/prefs_service.dart';
@@ -70,7 +71,7 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
     return cachedDrawingId != null;
   }
 
-  onDrawingTitleChnaged() {}
+  onDrawingTitleChanged() {}
 
   Future<void> createNewEntry(
       String title, TideDrawing? drawing, TideDrawingList? drawingList) async {
@@ -81,14 +82,13 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
         newDrawingSaved: false,
       );
 
-      final db = ref.read(dbProvider);
+      final canvasDao = ref.read(canvasDaoProvider);
       final cacheProvider = ref.read(prefsServiceProvider);
-      final canvasCompanion = CanvasTableCompanion(
-          title: Value(title),
-          drawing: Value(drawing ?? TideDrawing(paint: Paint())),
-          drawingList: Value(TideDrawingList()));
-      final row =
-          await db.into(db.canvasTable).insertOnConflictUpdate(canvasCompanion);
+
+      final row = await canvasDao.createDrawing(
+          title: title,
+          drawing: drawing ?? TideDrawing(paint: Paint()),
+          drawingList: TideDrawingList());
       await cacheProvider.saveInt(AppStrings.cachedDrawingKey, row);
 
       state = state.copyWith(
@@ -109,16 +109,13 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
       final int? cachedDrawingId = state.cachedDrawing;
 
       if (cachedDrawingId != null) {
-        final companion = CanvasTableCompanion(
-            drawingList: Value(drawingList),
-            drawing: Value(
-              drawing ?? drawingList.list.last,
-            ));
+        final canvasDao = ref.read(canvasDaoProvider);
 
-        //update drawing
-        await (db.update(db.canvasTable)
-              ..where((d) => d.id.equals(cachedDrawingId)))
-            .write(companion);
+        // update drawing
+        await canvasDao.updateDrawing(
+            id: cachedDrawingId,
+            drawing: drawing ?? drawingList.list.last,
+            drawingList: drawingList);
 
         state = state.copyWith(
           loadingCanvas: false,
@@ -137,8 +134,8 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
   /// All saved canvases
   Future<void> getSavedCanvases() async {
     state = state.copyWith(loadingSavedCanvases: true);
-    final db = ref.read(dbProvider);
-    final List<CanvasTableData> canvases = await db.getAllCanvases();
+    final dao = ref.read(canvasDaoProvider);
+    final List<CanvasTableData> canvases = await dao.getAllDrawings();
 
     state =
         state.copyWith(savedCanvases: canvases, loadingSavedCanvases: false);
@@ -146,16 +143,13 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
 
   /// Get canvas from ID saved in shared_prefs
   Future<void> getCachedCanvas() async {
-    final db = ref.read(dbProvider);
+    final dao = ref.read(canvasDaoProvider);
     final cachedCanvasExists = await cacheDrawingExists();
 
     if (cachedCanvasExists) {
       final id = state.cachedDrawing;
       if (id != null) {
-        final stream = await (db.select(db.canvasTable)
-              ..where((t) => t.id.equals(id)))
-            .watchSingle();
-        final data = await stream.first;
+        final CanvasTableData data = await dao.getSingleDrawing(id: id);
         // state = state.copyWith(allDrawings: data.);
       }
     }
