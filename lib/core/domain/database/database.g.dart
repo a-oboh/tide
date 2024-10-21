@@ -477,3 +477,24 @@ class $AppDatabaseManager {
   $$CanvasTableTableTableManager get canvasTable =>
       $$CanvasTableTableTableManager(_db, _db.canvasTable);
 }
+
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+String _$dbHash() => r'5318c967f76c866e5afd6c96b01cbab4e914ba30';
+
+/// See also [db].
+@ProviderFor(db)
+final dbProvider = AutoDisposeProvider<AppDatabase>.internal(
+  db,
+  name: r'dbProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$dbHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DbRef = AutoDisposeProviderRef<AppDatabase>;
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
