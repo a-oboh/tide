@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:drift/drift.dart';
@@ -89,7 +90,9 @@ class TideCanvasNotifier extends _$TideCanvasNotifier {
           title: title,
           drawing: drawing ?? TideDrawing(paint: Paint()),
           drawingList: TideDrawingList());
+      log('saved drawing');
       await cacheProvider.saveInt(AppStrings.cachedDrawingKey, row);
+
 
       state = state.copyWith(
           cachedDrawing: row, loadingCanvas: false, newDrawingSaved: true);
